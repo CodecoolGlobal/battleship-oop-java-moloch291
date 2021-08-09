@@ -11,4 +11,8 @@ public class Player {
     public boolean isAlive() {
         return true;
     }
+
+    public Player(String name) {
+        this.name = name;
+    }
 }

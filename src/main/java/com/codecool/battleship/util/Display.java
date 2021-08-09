@@ -1,5 +1,9 @@
 package com.codecool.battleship.util;
 
+import com.codecool.battleship.board.Board;
+
+import java.util.Arrays;
+
 public class Display {
     public void printMenu() {
         System.out.println("");
