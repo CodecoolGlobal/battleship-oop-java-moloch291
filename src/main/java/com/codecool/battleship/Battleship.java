@@ -10,8 +10,11 @@ public class Battleship {
         Display display = new Display();
         Input input = new Input();
         Game game = new Game();
-        Player player1 = new Player();
-        Player player2 = new Player();
+
+        display.askForName();
+        Player player1 = new Player(input.askForName(), game);
+        display.askForName();
+        Player player2 = new Player(input.askForName(), game);
     }
 
     public void gameLoop() {}

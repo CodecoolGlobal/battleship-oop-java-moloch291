@@ -22,7 +22,7 @@ public class Input {
         return "";
     }
 
-    public int[][] toCoordinates() {
+    public int[] toCoordinates(String s) {
         return null;
     }
 
