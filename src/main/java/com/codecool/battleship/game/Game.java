@@ -26,7 +26,7 @@ public class Game {
         int[] shipNosePosition = input.toCoordinates(input.inputCoordinate());
 
         display.askForOrientation();
-        Orientation shipOriented = defineOrientation(input.askForOrientation());
+        Orientation shipOriented = defineOrientation(input.askForOrientation(), type);
 
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         for (int addition = 0; addition < type.getSize() - 1; addition++) {
@@ -35,14 +35,14 @@ public class Game {
         return positionList;
     }
 
-    private Orientation defineOrientation(String input) {
-        Orientation output;
+    private Orientation defineOrientation(String input, ShipType type) {
+        Orientation output = null;
         switch (input) {
             case "n" -> output = Orientation.NORTH;
             case "w" -> output = Orientation.WEST;
             case "s" -> output = Orientation.SOUTH;
             case "e" -> output = Orientation.EAST;
-            default -> throw new IllegalStateException("Unexpected value: " + input);
+            default -> placeShip(type);
         } return output;
     }
 }
