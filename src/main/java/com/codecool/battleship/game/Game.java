@@ -1,5 +1,6 @@
 package com.codecool.battleship.game;
 
+import com.codecool.battleship.Battleship;
 import com.codecool.battleship.board.*;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
@@ -13,6 +14,7 @@ public class Game {
     private final Input input = new Input();
 
     public void gameLoop(int size) {
+
         Player1Board player1Board = new Player1Board(size);
         Player2Board player2Board = new Player2Board(size);
         display.askForName();
@@ -20,6 +22,23 @@ public class Game {
         display.printBoard(player1Board,player1);
         display.askForName();
         Player player2 = new Player(input.askForName(), this, player2Board);
+
+        int currentRound = 1;
+        boolean isRunning = true;
+        while (isRunning) {
+            Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
+            Board activeBoard = currentRound % 2 == 0 ? player2Board : player1Board;
+            if (!activePlayer.isAlive()) {
+                display.clearConsole();
+                display.printResults();
+                isRunning = false;
+            }
+            playRound(activePlayer, activeBoard);
+            currentRound++;
+        }
+        display.askForEnter();
+        input.askEnter();
+        Battleship.main(new String[]{});
     }
 
     public void playRound(Player activePlayer, Board board) {
