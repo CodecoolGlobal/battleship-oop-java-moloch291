@@ -31,7 +31,7 @@ public class Battleship {
                 else
                     mainMenu();
             }
-            case 0 -> System.exit(0);
+            case 2 -> System.exit(0);
             default -> mainMenu();
         }
     }
