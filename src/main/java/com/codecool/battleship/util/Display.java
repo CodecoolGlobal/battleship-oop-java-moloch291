@@ -69,7 +69,7 @@ public class Display {
                     } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT) {
                         output.append("\033[1;34m|_").append("\033[1;31mH").append("\033[1;34m_");
                     } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.MISS) {
-                        output.append("\033[1;34m|_").append("\033[0mM").append("\033[1;34m_");
+                        output.append("\033[1;34m|_").append("\033[1;33M").append("\033[1;34m_");
                     }
                 }
             }
@@ -81,8 +81,7 @@ public class Display {
 
 
     private String createTableHeader(int boardSize, Player activePlayer) {
-        StringBuilder tableHeader = new StringBuilder();
-        tableHeader.append("Player ").append(activePlayer.getName()).append("'s turn!\n").append("    ");
+        StringBuilder tableHeader = new StringBuilder().append("    ");
         for (int index = 0; index < boardSize; index++) {
             tableHeader.append(alphabetString.charAt(index)).append("   ");
         }

@@ -33,7 +33,7 @@ public class Player {
     }
 
     public boolean isAlive() {
-        return false;
+        return true;
     }
 
     public Player(String name) {

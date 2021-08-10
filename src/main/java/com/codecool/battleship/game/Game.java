@@ -20,8 +20,8 @@ public class Game {
         Player1Radar player1Radar = new Player1Radar(size);
         Player2Radar player2Radar = new Player2Radar(size);
         display.askForName();
-        Player player1 = new Player(input.askForName(), this,player1Board);
-        display.printBoard(player1Board,player1);
+        Player player1 = new Player(input.askForName(), this, player1Board);
+        display.printBoard(player1Board, player1);
         display.askForName();
         Player player2 = new Player(input.askForName(), this, player2Board);
 
@@ -29,8 +29,8 @@ public class Game {
         boolean isRunning = true;
         while (isRunning) {
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
-            Board activeBoard = currentRound % 2 == 0 ? player2Board : player1Board;
-            Board activeRadar = currentRound % 2 == 0 ? player1Radar : player2Radar;
+            Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
+            Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
             if (!activePlayer.isAlive()) {
                 display.clearConsole();
                 display.printResults();
@@ -46,6 +46,7 @@ public class Game {
 
     public void playRound(Player activePlayer, Board board, Board radar) {
         display.turn(activePlayer);
+        display.printRadar(radar, activePlayer);
         String shootArea = input.inputCoordinate();
         int[] shootCoordinates = input.toCoordinates(shootArea);
         int row = shootCoordinates[0];
@@ -63,6 +64,7 @@ public class Game {
             default:
                 break;
         }
+        display.printRadar(radar, activePlayer);
         if (hasWon(activePlayer)) {
             display.printResults();
         }
@@ -77,31 +79,36 @@ public class Game {
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
         int[] shipNosePosition = getStartingCoordinate(type);
-        ArrayList<String> validOrientations = validOrientations(shipNosePosition,type,board);
-        Orientation shipOriented = getShipOrientation(type,board);
-        while (!validOrientations.contains(shipOriented.getName())){
-            display.wrongCoordinates();
-            shipOriented = getShipOrientation(type,board);
+        while (!input.inputValidation(board, input.toString(shipNosePosition))) {
+            shipNosePosition = getStartingCoordinate(type);
+        }
+        System.out.println(type.getName());
+        if (!type.getName().equals("destroyer")) {
+            ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
+            Orientation shipOriented = getShipOrientation(type, board);
+            while (!validOrientations.contains(shipOriented.getName())) {
+                display.wrongCoordinates();
+                shipOriented = getShipOrientation(type, board);
+            }
         }
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
-        System.out.println(positionList);
         return positionList;
     }
 
-    private ArrayList<String> validOrientations(int [] shipNosePosition, ShipType type, Board board){
+    private ArrayList<String> validOrientations(int[] shipNosePosition, ShipType type, Board board) {
         ArrayList<String> validDirection = new ArrayList<>();
 
-        if (shipNosePosition[0] - type.getSize() >= 0){
+        if (shipNosePosition[0] - type.getSize() >= 0) {
             validDirection.add("N");
         }
-        if (shipNosePosition[1] - type.getSize() >= 0){
+        if (shipNosePosition[1] - type.getSize() >= 0) {
             validDirection.add("W");
         }
-        if (shipNosePosition[0] + type.getSize() <= board.getSize()){
+        if (shipNosePosition[0] + type.getSize() <= board.getSize()) {
             validDirection.add("S");
         }
-        if (shipNosePosition[0] + type.getSize() <= board.getSize()){
+        if (shipNosePosition[0] + type.getSize() <= board.getSize()) {
             validDirection.add("E");
         }
         return validDirection;
@@ -116,8 +123,8 @@ public class Game {
         int multiplierForShip = 1;
         for (int addition = 0; addition < type.getSize() - 1; addition++) {
             positionList.add(new Square(shipNosePosition[0] + shipOriented.getX() * multiplierForShip,
-                                        shipNosePosition[1] + shipOriented.getY() * multiplierForShip,
-                                        SquareStatus.SHIP));
+                    shipNosePosition[1] + shipOriented.getY() * multiplierForShip,
+                    SquareStatus.SHIP));
             multiplierForShip++;
         }
     }
@@ -133,8 +140,7 @@ public class Game {
     }
 
 
-
-    private Orientation defineOrientation(String input, ShipType type,Board board) {
+    private Orientation defineOrientation(String input, ShipType type, Board board) {
         Orientation output = null;
         switch (input) {
             case "N":
@@ -150,7 +156,8 @@ public class Game {
                 output = Orientation.EAST;
                 break;
             default:
-                placeShip(type,board);
-        } return output;
+                placeShip(type, board);
+        }
+        return output;
     }
 }
