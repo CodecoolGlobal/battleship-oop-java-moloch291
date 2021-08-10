@@ -2,6 +2,7 @@ package com.codecool.battleship.game;
 
 import com.codecool.battleship.Battleship;
 import com.codecool.battleship.board.*;
+import com.codecool.battleship.ships.Ship;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
@@ -33,6 +34,7 @@ public class Game {
             Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
+            printShipDetails(activePlayer);
             playRound(activePlayer, opponent, activeBoard, activeRadar);
             if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
@@ -44,6 +46,14 @@ public class Game {
         display.askForEnter();
         input.askEnter();
         Battleship.main(new String[]{});
+    }
+
+    private void printShipDetails(Player activePlayer) {
+        for (Ship ship : activePlayer.getShips()) {
+            for (Square coordinate : ship.getPlacement()) {
+                System.out.println(coordinate.getSquareStatus());
+            }
+        }
     }
 
     public void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
@@ -64,8 +74,6 @@ public class Game {
                 radarSquare.setSquareStatus(SquareStatus.HIT);
                 opponent.setShipSquares();
                 break;
-            default:
-                break;
         }
         display.printRadar(radar, activePlayer);
     }
@@ -79,8 +87,7 @@ public class Game {
         List<Square> positionList = new ArrayList<>();
         int[] shipNosePosition = getStartingCoordinate(type);
         shipNosePosition = validateNosePosition(type, board, shipNosePosition);
-        System.out.println(type.getName());
-        if (!type.getName().equals("destroyer")) {
+        if (type != ShipType.DESTROYER) {
             return getOrientation(type, board, positionList, shipNosePosition);
         }
         Orientation shipOriented = Orientation.EAST;
@@ -94,10 +101,10 @@ public class Game {
                                         List<Square> positionList,
                                         int[] shipNosePosition) {
         ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
-        Orientation shipOriented = getShipOrientation(type, board);
+        Orientation shipOriented = getShipOrientation(type, board, validOrientations);
         while (!validOrientations.contains(shipOriented.getName())) {
             display.wrongCoordinates();
-            shipOriented = getShipOrientation(type, board);
+            shipOriented = getShipOrientation(type, board, validOrientations);
         }
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
@@ -144,8 +151,8 @@ public class Game {
         }
     }
 
-    private Orientation getShipOrientation(ShipType type, Board board) {
-        display.askForOrientation();
+    private Orientation getShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
+        display.askForOrientation(validOrientations);
         return defineOrientation(input.inputCoordinate(), type, board);
     }
 

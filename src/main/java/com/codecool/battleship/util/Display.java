@@ -5,6 +5,8 @@ import com.codecool.battleship.board.SquareStatus;
 import com.codecool.battleship.game.Player;
 import com.codecool.battleship.ships.ShipType;
 
+import java.util.ArrayList;
+
 public class Display {
 
     private final String alphabetString = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
@@ -104,8 +106,11 @@ public class Display {
         System.out.println("It's " + activePlayer.getName() + "'s turn! Choose a coordinate to shoot at:\n");
     }
 
-    public void askForOrientation() {
-        System.out.println("Give me the orientation! (N, W, S or E)");
+    public void askForOrientation(ArrayList<String> validOrientations) {
+        StringBuilder output = new StringBuilder().append("Give me the orientation! (");
+        for (String validOption : validOrientations)
+            output.append(validOption).append(", ");
+        System.out.println(output.substring(0, output.length() - 2) + ")");
     }
 
     public void wrongCoordinates(){
