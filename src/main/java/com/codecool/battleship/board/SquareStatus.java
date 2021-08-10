@@ -6,7 +6,6 @@ public enum SquareStatus {
     HIT('H'),
     MISS('M');
 
-
     SquareStatus(char symbol) {
     }
 }

@@ -21,7 +21,7 @@ public class Player {
     private List<Ship> loadUpFleet(Game game, Board board) {
         List<Ship> fleet = new ArrayList<>();
         BoardFactory manualPlace = new BoardFactory();
-        manualPlace.manualPlacement(board,this,fleet,game);
+        manualPlace.manualPlacement(board, this, fleet, game);
         return fleet;
     }
 
