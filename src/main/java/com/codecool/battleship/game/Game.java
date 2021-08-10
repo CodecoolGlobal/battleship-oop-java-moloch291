@@ -21,18 +21,38 @@ public class Game {
 
     public List<Square> placeShip(ShipType type) {
         List<Square> positionList = new ArrayList<>();
+        int[] shipNosePosition = getStartingCoordinate(type);
+        Orientation shipOriented = getShipOrientation(type);
+        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+        return positionList;
+    }
 
-        display.askForCoordinates(type);
-        int[] shipNosePosition = input.toCoordinates(input.inputCoordinate());
+    private void fillUpPositionList(
+            ShipType type,
+            List<Square> positionList,
+            int[] shipNosePosition,
+            Orientation shipOriented
+    ) {
+        int multiplierForShip = 1;
+        for (int addition = 0; addition < type.getSize() - 1; addition++) {
+            positionList.add(new Square(shipNosePosition[0] + shipOriented.getX() * multiplierForShip,
+                                        shipNosePosition[1] + shipOriented.getY() * multiplierForShip,
+                                        SquareStatus.SHIP));
+            multiplierForShip++;
+        }
+    }
 
+    private Orientation getShipOrientation(ShipType type) {
         display.askForOrientation();
         Orientation shipOriented = defineOrientation(input.askForOrientation(), type);
+        return shipOriented;
+    }
 
-        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
-        for (int addition = 0; addition < type.getSize() - 1; addition++) {
-            positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
-        }
-        return positionList;
+    private int[] getStartingCoordinate(ShipType type) {
+        display.askForCoordinates(type);
+        int[] shipNosePosition = input.toCoordinates(input.inputCoordinate());
+        return shipNosePosition;
     }
 
     private Orientation defineOrientation(String input, ShipType type) {

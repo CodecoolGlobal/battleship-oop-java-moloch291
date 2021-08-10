@@ -19,9 +19,9 @@ public class Player {
         List<Ship> fleet = new ArrayList<>();
         fleet.add(new Ship(game.placeShip(ShipType.CARRIER) , ShipType.CARRIER));
         fleet.add(new Ship(game.placeShip(ShipType.CRUISER) , ShipType.CRUISER));
-        fleet.add(new Ship( , ShipType.BATTLESHIP));
-        fleet.add(new Ship( , ShipType.SUBMARINE));
-        fleet.add(new Ship( , ShipType.DESTROYER));
+        fleet.add(new Ship(game.placeShip(ShipType.BATTLESHIP) , ShipType.BATTLESHIP));
+        fleet.add(new Ship(game.placeShip(ShipType.SUBMARINE) , ShipType.SUBMARINE));
+        fleet.add(new Ship(game.placeShip(ShipType.DESTROYER) , ShipType.DESTROYER));
         return fleet;
     }
 
