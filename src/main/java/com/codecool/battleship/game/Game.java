@@ -17,6 +17,8 @@ public class Game {
 
         Player1Board player1Board = new Player1Board(size);
         Player2Board player2Board = new Player2Board(size);
+        Player1Radar player1Radar = new Player1Radar(size);
+        Player2Radar player2Radar = new Player2Radar(size);
         display.askForName();
         Player player1 = new Player(input.askForName(), this,player1Board);
         display.printBoard(player1Board,player1);
@@ -28,12 +30,13 @@ public class Game {
         while (isRunning) {
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
             Board activeBoard = currentRound % 2 == 0 ? player2Board : player1Board;
+            Board activeRadar = currentRound % 2 == 0 ? player1Radar : player2Radar;
             if (!activePlayer.isAlive()) {
                 display.clearConsole();
                 display.printResults();
                 isRunning = false;
             }
-            playRound(activePlayer, activeBoard);
+            playRound(activePlayer, activeBoard, activeRadar);
             currentRound++;
         }
         display.askForEnter();
@@ -41,19 +44,22 @@ public class Game {
         Battleship.main(new String[]{});
     }
 
-    public void playRound(Player activePlayer, Board board) {
+    public void playRound(Player activePlayer, Board board, Board radar) {
         display.turn(activePlayer);
         String shootArea = input.inputCoordinate();
         int[] shootCoordinates = input.toCoordinates(shootArea);
         int row = shootCoordinates[0];
         int col = shootCoordinates[1];
         Square square = board.getBoard()[row][col];
+        Square radarSquare = radar.getBoard()[row][col];
         SquareStatus status = square.getSquareStatus();
         switch (status) {
             case EMPTY:
-                square.setSquareStatus(SquareStatus.MISS);
+                radarSquare.setSquareStatus(SquareStatus.MISS);
+                break;
             case SHIP:
-                square.setSquareStatus(SquareStatus.HIT);
+                radarSquare.setSquareStatus(SquareStatus.HIT);
+                break;
             default:
                 break;
         }

@@ -65,4 +65,8 @@ public class Input {
         return input.nextLine();
     }
 
+    public String askEnter() {
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
+    }
 }
