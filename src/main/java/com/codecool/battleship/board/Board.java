@@ -13,10 +13,6 @@ public abstract class Board {
         return false;
     }
 
-    public abstract void printOcean(int size);
-
-    public abstract void printDetailedOcean(int size);
-
     public int getSize() {
         return size;
     }

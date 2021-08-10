@@ -4,34 +4,38 @@ import com.codecool.battleship.game.Game;
 import com.codecool.battleship.game.Player;
 import com.codecool.battleship.ships.Ship;
 import com.codecool.battleship.ships.ShipType;
+import com.codecool.battleship.util.Display;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class BoardFactory {
-    public void manualPlacement(Board board, Player player, List<Ship> fleet, Game game) {
-        fleet.add(new Ship(game.placeShip(ShipType.CARRIER) , ShipType.CARRIER));
-        boardPlacement(fleet,board);
-        fleet.add(new Ship(game.placeShip(ShipType.CRUISER) , ShipType.CRUISER));
-        boardPlacement(fleet,board);
-        fleet.add(new Ship(game.placeShip(ShipType.BATTLESHIP) , ShipType.BATTLESHIP));
-        boardPlacement(fleet,board);
-        fleet.add(new Ship(game.placeShip(ShipType.SUBMARINE) , ShipType.SUBMARINE));
-        boardPlacement(fleet,board);
-        fleet.add(new Ship(game.placeShip(ShipType.DESTROYER) , ShipType.DESTROYER));
-        boardPlacement(fleet,board);
-    }
+    Display display = new Display();
 
-    public void boardPlacement(List<Ship> fleet, Board board){
-        Square[][] table = board.getBoard();
-        for (Ship ship : fleet){
-            for(Square coordinate : ship.getPlacement()){
-                table[coordinate.getX()][coordinate.getY()].setSquareStatus(SquareStatus.SHIP);
-            }
+    public void manualPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
+        for (ShipType type : Arrays.asList(ShipType.CARRIER,
+                                           ShipType.CRUISER,
+                                           ShipType.BATTLESHIP,
+                                           ShipType.SUBMARINE,
+                                           ShipType.DESTROYER)) {
+            display.printBoard(board, activePlayer);
+            placeShip(board, fleet, new Ship(game.placeShip(type) , type));
+            display.clearConsole();
         }
     }
 
-    public void randomPlacement() {
+    private void placeShip(Board board, List<Ship> fleet, Ship ship) {
+        fleet.add(ship);
+        boardPlacement(ship, board);
+    }
 
+    public void boardPlacement(Ship ship, Board board){
+        Square[][] table = board.getBoard();
+        for(Square coordinate : ship.getPlacement()){
+                table[coordinate.getX()][coordinate.getY()].setSquareStatus(SquareStatus.SHIP);
+            }
+    }
+
+    public void randomPlacement() {
     }
 }
