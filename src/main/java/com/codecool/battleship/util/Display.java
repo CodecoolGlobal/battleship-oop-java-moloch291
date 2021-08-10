@@ -82,6 +82,10 @@ public class Display {
         System.out.println("Give me the orientation");
     }
 
+    public void wrongCoordinates(){
+        System.out.println("Wrong coordinates, try again !");
+    }
+
     public void clearConsole() {
     }
 

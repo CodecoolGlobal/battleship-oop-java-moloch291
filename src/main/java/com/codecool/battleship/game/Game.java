@@ -50,14 +50,37 @@ public class Game {
         return false;
     }
 
-    public List<Square> placeShip(ShipType type) {
+    public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
         int[] shipNosePosition = getStartingCoordinate(type);
-        Orientation shipOriented = getShipOrientation(type);
+        ArrayList<String> validOrientations = validOrientations(shipNosePosition,type,board);
+        Orientation shipOriented = getShipOrientation(type,board);
+        while (!validOrientations.contains(shipOriented.getName())){
+            display.wrongCoordinates();
+            shipOriented = getShipOrientation(type,board);
+        }
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
         System.out.println(positionList);
         return positionList;
+    }
+
+    private ArrayList<String> validOrientations(int [] shipNosePosition, ShipType type, Board board){
+        ArrayList<String> validDirection = new ArrayList<>();
+
+        if (shipNosePosition[0] - type.getSize() >= 0){
+            validDirection.add("N");
+        }
+        if (shipNosePosition[1] - type.getSize() >= 0){
+            validDirection.add("W");
+        }
+        if (shipNosePosition[0] + type.getSize() <= board.getSize()){
+            validDirection.add("S");
+        }
+        if (shipNosePosition[0] + type.getSize() <= board.getSize()){
+            validDirection.add("E");
+        }
+        return validDirection;
     }
 
     private void fillUpPositionList(
@@ -75,9 +98,9 @@ public class Game {
         }
     }
 
-    private Orientation getShipOrientation(ShipType type) {
+    private Orientation getShipOrientation(ShipType type, Board board) {
         display.askForOrientation();
-        return defineOrientation(input.askForOrientation(), type);
+        return defineOrientation(input.inputCoordinate(), type, board);
     }
 
     private int[] getStartingCoordinate(ShipType type) {
@@ -85,14 +108,16 @@ public class Game {
         return input.toCoordinates(input.inputCoordinate());
     }
 
-    private Orientation defineOrientation(String input, ShipType type) {
+
+
+    private Orientation defineOrientation(String input, ShipType type,Board board) {
         Orientation output = null;
         switch (input) {
-            case "n" -> output = Orientation.NORTH;
-            case "w" -> output = Orientation.WEST;
-            case "s" -> output = Orientation.SOUTH;
-            case "e" -> output = Orientation.EAST;
-            default -> placeShip(type);
+            case "N" -> output = Orientation.NORTH;
+            case "W" -> output = Orientation.WEST;
+            case "S" -> output = Orientation.SOUTH;
+            case "E" -> output = Orientation.EAST;
+            default -> placeShip(type,board);
         } return output;
     }
 }

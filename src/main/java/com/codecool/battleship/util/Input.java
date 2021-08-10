@@ -5,6 +5,7 @@ import com.codecool.battleship.board.Square;
 import com.codecool.battleship.board.SquareStatus;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Input {
@@ -18,7 +19,7 @@ public class Input {
 
     public String inputCoordinate() {
         Scanner input = new Scanner(System.in);
-        return input.nextLine();
+        return input.nextLine().toUpperCase();
     }
 
     private boolean inputValidation(Board board, String stringCoordinate) {
@@ -64,8 +65,4 @@ public class Input {
         return input.nextLine();
     }
 
-    public String askForOrientation() {
-        Scanner input = new Scanner(System.in);
-        return input.nextLine();
-    }
 }
