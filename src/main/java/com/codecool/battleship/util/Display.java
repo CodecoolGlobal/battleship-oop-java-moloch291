@@ -37,22 +37,48 @@ public class Display {
             if (row + 1 < 10) output.append(" ");
             for (int column = 0; column < board.getSize(); column++) {
                 if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.EMPTY)
-                    output.append("|_").append("\033[0;34m~").append("\033[0m_");
+                    output.append("\033[1;34m|_").append("~").append("_");
                 else {
                     if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.SHIP) {
-                        output.append("|_").append("#_");
+                        output.append("\033[1;34m|_").append("\033[1;32m#").append("\033[1;34m_");
                     } else if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT) {
-                        output.append("|_").append("H_");
+                        output.append("\033[1;34m|_").append("\033[1;31mH").append("\033[1;34m_");
                     } else if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.MISS) {
-                        output.append("|_").append("M_");
+                        output.append("\033[1;34m|_").append("\033[0mM").append("\033[1;34m_");
                     }
                 }
             }
-            output.append("|\n");
+            output.append("|\033[0m\n");
         }
         System.out.println(tableHeader);
         System.out.println(output);
     }
+
+    public void printRadar(Board radar, Player activePlayer) {
+        StringBuilder output = new StringBuilder();
+        String tableHeader = createTableHeader(radar.getSize(), activePlayer);
+        for (int row = 0; row < radar.getSize(); row++) {
+            output.append(row + 1);
+            if (row + 1 < 10) output.append(" ");
+            for (int column = 0; column < radar.getSize(); column++) {
+                if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.EMPTY)
+                    output.append("\033[1;34m|_").append("~").append("_");
+                else {
+                    if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.SHIP) {
+                        output.append("\033[1;34m|_").append("\033[1;32m#").append("\033[1;34m_");
+                    } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT) {
+                        output.append("\033[1;34m|_").append("\033[1;31mH").append("\033[1;34m_");
+                    } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.MISS) {
+                        output.append("\033[1;34m|_").append("\033[0mM").append("\033[1;34m_");
+                    }
+                }
+            }
+            output.append("|\033[0m\n");
+        }
+        System.out.println(tableHeader);
+        System.out.println(output);
+    }
+
 
     private String createTableHeader(int boardSize, Player activePlayer) {
         StringBuilder tableHeader = new StringBuilder();
@@ -76,6 +102,7 @@ public class Display {
     }
 
     public void turn(Player activePlayer) {
+        System.out.println("It's " + activePlayer.getName() + "'s turn! Choose a coordinate to shoot at: ");
     }
 
     public void askForOrientation() {
