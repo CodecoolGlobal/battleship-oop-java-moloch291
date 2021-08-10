@@ -130,7 +130,7 @@ public class Game {
         if (shipNosePosition[0] + type.getSize() <= board.getSize()) {
             validDirection.add("S");
         }
-        if (shipNosePosition[0] + type.getSize() <= board.getSize()) {
+        if (shipNosePosition[1] + type.getSize() <= board.getSize()) {
             validDirection.add("E");
         }
         return validDirection;
