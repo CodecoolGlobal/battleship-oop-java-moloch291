@@ -2,6 +2,7 @@ package com.codecool.battleship.game;
 
 import com.codecool.battleship.board.Board;
 import com.codecool.battleship.board.BoardFactory;
+import com.codecool.battleship.board.Square;
 import com.codecool.battleship.ships.Ship;
 
 import java.util.ArrayList;
@@ -10,10 +11,17 @@ import java.util.List;
 public class Player {
     private List<Ship> ships;
     private final String name;
+    private int shipSquares;
 
     public Player(String name, Game game, Board board) {
         this.name = name;
         this.ships = loadUpFleet(game, board);
+        this.shipSquares = 0;
+        for (Ship ship : ships) {
+            for (Square square : ship.getPlacement()) {
+                shipSquares++;
+            }
+        }
     }
 
 
@@ -38,5 +46,13 @@ public class Player {
 
     public Player(String name) {
         this.name = name;
+    }
+
+    public int getShipSquares() {
+        return shipSquares;
+    }
+
+    public void setShipSquares() {
+        this.shipSquares--;
     }
 }

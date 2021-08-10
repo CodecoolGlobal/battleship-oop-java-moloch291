@@ -29,14 +29,15 @@ public class Game {
         boolean isRunning = true;
         while (isRunning) {
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
+            Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
-            if (!activePlayer.isAlive()) {
+            playRound(activePlayer, opponent, activeBoard, activeRadar);
+            if (hasWon(opponent)) {
                 display.clearConsole();
-                display.printResults();
+                display.printResults(activePlayer);
                 isRunning = false;
             }
-            playRound(activePlayer, activeBoard, activeRadar);
             currentRound++;
         }
         display.askForEnter();
@@ -44,7 +45,7 @@ public class Game {
         Battleship.main(new String[]{});
     }
 
-    public void playRound(Player activePlayer, Board board, Board radar) {
+    public void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
         display.turn(activePlayer);
         display.printRadar(radar, activePlayer);
         String shootArea = input.inputCoordinate();
@@ -60,20 +61,17 @@ public class Game {
                 break;
             case SHIP:
                 radarSquare.setSquareStatus(SquareStatus.HIT);
+                opponent.setShipSquares();
                 break;
             default:
                 break;
         }
         display.printRadar(radar, activePlayer);
-        if (hasWon(activePlayer)) {
-            display.printResults();
-        }
-
     }
 
 
-    public boolean hasWon(Player activePlayer) {
-        return false;
+    public boolean hasWon(Player opponent) {
+        return opponent.getShipSquares() == 0;
     }
 
     public List<Square> placeShip(ShipType type, Board board) {
@@ -90,7 +88,11 @@ public class Game {
                 display.wrongCoordinates();
                 shipOriented = getShipOrientation(type, board);
             }
+            positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+            fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+            return positionList;
         }
+        Orientation shipOriented = Orientation.EAST;
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
         return positionList;

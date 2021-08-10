@@ -92,8 +92,8 @@ public class Display {
         System.out.println("");
     }
 
-    public void printResults() {
-        System.out.println("");
+    public void printResults(Player activePlayer) {
+        System.out.println(activePlayer.getName() + " has won!");
     }
 
     public void askForName() {
