@@ -1,9 +1,6 @@
 package com.codecool.battleship;
 
-import com.codecool.battleship.board.Player1Board;
-import com.codecool.battleship.board.Player2Board;
 import com.codecool.battleship.game.Game;
-import com.codecool.battleship.game.Player;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
@@ -23,16 +20,18 @@ public class Battleship {
         int menuInput = input.inputForMenu();
 
         switch (menuInput) {
-            case 1 -> {
+            case 1:
                 display.askForBoardSize();
                 int chosenSize = input.inputForMenu();
                 if (chosenSize >= 10 && chosenSize <= 20)
                     game.gameLoop(chosenSize);
                 else
                     mainMenu();
-            }
-            case 2 -> System.exit(0);
-            default -> mainMenu();
+                break;
+            case 2:
+                System.exit(0);
+            default:
+                mainMenu();
         }
     }
 

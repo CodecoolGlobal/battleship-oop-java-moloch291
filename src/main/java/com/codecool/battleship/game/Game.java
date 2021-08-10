@@ -6,7 +6,6 @@ import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -113,11 +112,20 @@ public class Game {
     private Orientation defineOrientation(String input, ShipType type,Board board) {
         Orientation output = null;
         switch (input) {
-            case "N" -> output = Orientation.NORTH;
-            case "W" -> output = Orientation.WEST;
-            case "S" -> output = Orientation.SOUTH;
-            case "E" -> output = Orientation.EAST;
-            default -> placeShip(type,board);
+            case "N":
+                output = Orientation.NORTH;
+                break;
+            case "W":
+                output = Orientation.WEST;
+                break;
+            case "S":
+                output = Orientation.SOUTH;
+                break;
+            case "E":
+                output = Orientation.EAST;
+                break;
+            default:
+                placeShip(type,board);
         } return output;
     }
 }

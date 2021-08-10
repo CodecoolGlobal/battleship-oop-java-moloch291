@@ -3,7 +3,6 @@ package com.codecool.battleship.game;
 import com.codecool.battleship.board.Board;
 import com.codecool.battleship.board.BoardFactory;
 import com.codecool.battleship.ships.Ship;
-import com.codecool.battleship.ships.ShipType;
 
 import java.util.ArrayList;
 import java.util.List;

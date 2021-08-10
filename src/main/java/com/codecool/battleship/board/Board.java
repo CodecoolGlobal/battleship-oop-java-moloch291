@@ -1,7 +1,5 @@
 package com.codecool.battleship.board;
 
-import java.util.Arrays;
-
 public abstract class Board {
     private final int size;
 
