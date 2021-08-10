@@ -101,11 +101,11 @@ public class Display {
     }
 
     public void turn(Player activePlayer) {
-        System.out.println("It's " + activePlayer.getName() + "'s turn! Choose a coordinate to shoot at: ");
+        System.out.println("It's " + activePlayer.getName() + "'s turn! Choose a coordinate to shoot at:\n");
     }
 
     public void askForOrientation() {
-        System.out.println("Give me the orientation");
+        System.out.println("Give me the orientation! (N, W, S or E)");
     }
 
     public void wrongCoordinates(){
@@ -123,5 +123,21 @@ public class Display {
 
     public void askForEnter() {
         System.out.println("Press enter!");
+    }
+
+    public void deliverSizeErrorMessage() {
+        System.out.println("Invalid size! The board size should be between 10 and 20!");
+    }
+
+    public void deliverInvalidOptionErrorMessage() {
+        System.out.println("There is no option of your choice!");
+    }
+
+    public void printGoodByeMessage() {
+        System.out.println("Good bye!");
+    }
+
+    public void printPlacementPhaseHeader(Player activePlayer) {
+        System.out.println(activePlayer.getName() + "'s deployment phase:\n");
     }
 }

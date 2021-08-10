@@ -19,9 +19,10 @@ public class Game {
         Player2Board player2Board = new Player2Board(size);
         Player1Radar player1Radar = new Player1Radar(size);
         Player2Radar player2Radar = new Player2Radar(size);
+        display.clearConsole();
         display.askForName();
         Player player1 = new Player(input.askForName(), this, player1Board);
-        display.printBoard(player1Board, player1);
+        display.clearConsole();
         display.askForName();
         Player player2 = new Player(input.askForName(), this, player2Board);
 
@@ -33,7 +34,7 @@ public class Game {
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
             playRound(activePlayer, opponent, activeBoard, activeRadar);
-            if (hasWon(opponent)) {
+            if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
                 display.printResults(activePlayer);
                 isRunning = false;
@@ -77,25 +78,37 @@ public class Game {
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
         int[] shipNosePosition = getStartingCoordinate(type);
-        while (!input.inputValidation(board, input.toString(shipNosePosition))) {
-            shipNosePosition = getStartingCoordinate(type);
-        }
+        shipNosePosition = validateNosePosition(type, board, shipNosePosition);
         System.out.println(type.getName());
         if (!type.getName().equals("destroyer")) {
-            ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
-            Orientation shipOriented = getShipOrientation(type, board);
-            while (!validOrientations.contains(shipOriented.getName())) {
-                display.wrongCoordinates();
-                shipOriented = getShipOrientation(type, board);
-            }
-            positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
-            fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
-            return positionList;
+            return getOrientation(type, board, positionList, shipNosePosition);
         }
         Orientation shipOriented = Orientation.EAST;
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
         return positionList;
+    }
+
+    private List<Square> getOrientation(ShipType type,
+                                        Board board,
+                                        List<Square> positionList,
+                                        int[] shipNosePosition) {
+        ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
+        Orientation shipOriented = getShipOrientation(type, board);
+        while (!validOrientations.contains(shipOriented.getName())) {
+            display.wrongCoordinates();
+            shipOriented = getShipOrientation(type, board);
+        }
+        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+        return positionList;
+    }
+
+    private int[] validateNosePosition(ShipType type, Board board, int[] shipNosePosition) {
+        while (!input.inputValidation(board, input.toString(shipNosePosition))) {
+            shipNosePosition = getStartingCoordinate(type);
+        }
+        return shipNosePosition;
     }
 
     private ArrayList<String> validOrientations(int[] shipNosePosition, ShipType type, Board board) {

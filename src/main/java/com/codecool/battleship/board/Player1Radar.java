@@ -1,7 +1,7 @@
 package com.codecool.battleship.board;
 
 public class Player1Radar extends Board {
-    private Square[][] ocean;
+    private final Square[][] ocean;
 
 
     public Player1Radar(int size) {

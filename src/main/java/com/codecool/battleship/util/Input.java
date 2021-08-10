@@ -22,9 +22,6 @@ public class Input {
 
     public boolean inputValidation(Board board, String stringCoordinate) {
         // 0 = row, 1 = column
-        System.out.println(validateCoordinateInput(board, stringCoordinate, 0));
-        System.out.println(validateCoordinateInput(board, stringCoordinate, 1));
-        System.out.println(!validateCoordinateStatus(board, stringCoordinate));
         return validateCoordinateInput(board, stringCoordinate, 0) &&
                 validateCoordinateInput(board, stringCoordinate, 1) &&
                 validateCoordinateStatus(board, stringCoordinate);
@@ -37,7 +34,6 @@ public class Input {
     private boolean validateCoordinateStatus(Board board, String stringCoordinate) {
         int[] shootCoordinate = toCoordinates(stringCoordinate);
         Square square = board.getBoard()[shootCoordinate[0]][shootCoordinate[1]];
-        System.out.println(square.getSquareStatus());
         return square.getSquareStatus() != SquareStatus.MISS &&
                 square.getSquareStatus() != SquareStatus.HIT &&
                 square.getSquareStatus() != SquareStatus.SHIP;

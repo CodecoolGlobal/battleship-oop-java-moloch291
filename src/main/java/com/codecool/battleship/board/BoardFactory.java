@@ -14,13 +14,16 @@ public class BoardFactory {
 
     public void manualPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
         display.clearConsole();
-        for (ShipType type : Arrays.asList(ShipType.CARRIER,
-                                           ShipType.CRUISER,
-                                           ShipType.BATTLESHIP,
-                                           ShipType.SUBMARINE,
-                                           ShipType.DESTROYER)) {
+        for (ShipType type : Arrays.asList(
+                ShipType.CARRIER,
+                ShipType.CRUISER,
+                ShipType.BATTLESHIP,
+                ShipType.SUBMARINE,
+                ShipType.DESTROYER
+        )) {
+            display.printPlacementPhaseHeader(activePlayer);
             display.printBoard(board, activePlayer);
-            placeShip(board, fleet, new Ship(game.placeShip(type,board) , type));
+            placeShip(board, fleet, new Ship(game.placeShip(type, board), type));
             display.clearConsole();
         }
     }
@@ -30,12 +33,12 @@ public class BoardFactory {
         boardPlacement(ship, board);
     }
 
-    public void boardPlacement(Ship ship, Board board){
+    public void boardPlacement(Ship ship, Board board) {
         Square[][] table = board.getBoard();
-        for(Square coordinate : ship.getPlacement()){
-                table[coordinate.getX()][coordinate.getY()].setSquareStatus(SquareStatus.SHIP);
-            }
+        for (Square coordinate : ship.getPlacement()) {
+            table[coordinate.getX()][coordinate.getY()].setSquareStatus(SquareStatus.SHIP);
         }
+    }
 
     public void randomPlacement() {
 

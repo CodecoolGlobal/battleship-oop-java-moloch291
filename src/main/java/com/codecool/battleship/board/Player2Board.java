@@ -3,7 +3,7 @@ package com.codecool.battleship.board;
 import java.util.Arrays;
 
 public class Player2Board extends Board {
-    private Square[][] ocean;
+    private final Square[][] ocean;
 
     public Player2Board(int size) {
         super(size);

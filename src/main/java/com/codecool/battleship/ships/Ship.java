@@ -16,4 +16,8 @@ public class Ship {
     public List<Square> getPlacement() {
         return placement;
     }
+
+    public ShipType getType() {
+        return type;
+    }
 }

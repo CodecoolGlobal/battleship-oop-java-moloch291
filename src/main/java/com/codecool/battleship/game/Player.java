@@ -18,7 +18,7 @@ public class Player {
         this.ships = loadUpFleet(game, board);
         this.shipSquares = 0;
         for (Ship ship : ships) {
-            for (Square square : ship.getPlacement()) {
+            for (Square ignored : ship.getPlacement()) {
                 shipSquares++;
             }
         }
@@ -41,7 +41,7 @@ public class Player {
     }
 
     public boolean isAlive() {
-        return true;
+        return shipSquares > 0;
     }
 
     public Player(String name) {
