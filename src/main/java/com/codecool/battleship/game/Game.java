@@ -13,7 +13,28 @@ public class Game {
     private final Display display = new Display();
     private final Input input = new Input();
 
-    public void playRound() {}
+    public void playRound(int activePlayer, Board board) {
+        display.turn(activePlayer);
+        String shootArea = input.inputCoordinate();
+        int[] shootCoordinates = input.toCoordinates(shootArea);
+        int row = shootCoordinates[0];
+        int col = shootCoordinates[1];
+        Square square = board.getSquare()[row][col];
+        String status = square.getStatus();
+        switch (status) {
+            case "EMPTY":
+                square.setSquareStatus(SquareStatus.MISS);
+            case "SHIP":
+                square.setSquareStatus(SquareStatus.HIT);
+            default:
+                break;
+        }
+        if (hasWon(activePlayer)) {
+            display.printResults();
+        }
+
+    }
+
 
     public boolean hasWon() {
         return false;

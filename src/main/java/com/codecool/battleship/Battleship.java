@@ -1,5 +1,8 @@
 package com.codecool.battleship;
 
+import com.codecool.battleship.board.Board;
+import com.codecool.battleship.board.Player1Board;
+import com.codecool.battleship.board.Player2Board;
 import com.codecool.battleship.game.Game;
 import com.codecool.battleship.game.Player;
 import com.codecool.battleship.util.Display;

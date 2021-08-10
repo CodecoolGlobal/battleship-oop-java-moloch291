@@ -1,15 +1,23 @@
 package com.codecool.battleship.board;
 
-public class Board {
+import java.util.Arrays;
+
+public abstract class Board {
     private final int size;
-    private Square[][] ocean;
 
     public Board(int size) {
         this.size = size;
-        this.ocean = new Square[size][size];
     }
 
     public boolean isPlacementOkay() {
         return false;
+    }
+
+    public abstract void printOcean(int size);
+
+    public abstract void printDetailedOcean(int size);
+
+    public int getSize() {
+        return size;
     }
 }
