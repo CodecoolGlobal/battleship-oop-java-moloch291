@@ -20,7 +20,7 @@ public class BoardFactory {
                                            ShipType.SUBMARINE,
                                            ShipType.DESTROYER)) {
             display.printBoard(board, activePlayer);
-            placeShip(board, fleet, new Ship(game.placeShip(type) , type));
+            placeShip(board, fleet, new Ship(game.placeShip(type,board) , type));
             display.clearConsole();
         }
     }
@@ -36,7 +36,6 @@ public class BoardFactory {
                 table[coordinate.getX()][coordinate.getY()].setSquareStatus(SquareStatus.SHIP);
             }
         }
-    }
 
     public void randomPlacement() {
 
