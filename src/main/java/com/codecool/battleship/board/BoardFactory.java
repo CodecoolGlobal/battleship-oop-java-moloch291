@@ -13,6 +13,7 @@ public class BoardFactory {
     Display display = new Display();
 
     public void manualPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
+        display.clearConsole();
         for (ShipType type : Arrays.asList(ShipType.CARRIER,
                                            ShipType.CRUISER,
                                            ShipType.BATTLESHIP,
