@@ -2,6 +2,7 @@ package com.codecool.battleship.util;
 
 import com.codecool.battleship.board.Board;
 import com.codecool.battleship.board.Square;
+import com.codecool.battleship.board.SquareStatus;
 
 import java.util.Scanner;
 
@@ -36,8 +37,8 @@ public class Input {
 
     private boolean validateCoordinateStatus(Board board, String stringCoordinate) {
         int[] shootCoordinate = toCoordinates(stringCoordinate);
-        Square square = board.getSquare()[shootCoordinate[0]][shootCoordinate[1]];
-        return square.getStatus() != "MISS" || square.getStatus() != "HIT";
+        Square square = board.getBoard()[shootCoordinate[0]][shootCoordinate[1]];
+        return square.getStatus() != SquareStatus.MISS || square.getStatus() != SquareStatus.HIT;
     }
 
     public String toString(int[] intArrayCoordinate) {
@@ -59,5 +60,9 @@ public class Input {
     public String askForName() {
         Scanner input = new Scanner(System.in);
         return input.nextLine();
+    }
+
+    public String askForOrientation() {
+        return "";
     }
 }

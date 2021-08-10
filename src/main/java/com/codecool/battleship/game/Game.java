@@ -1,7 +1,6 @@
 package com.codecool.battleship.game;
 
-import com.codecool.battleship.board.Square;
-import com.codecool.battleship.board.SquareStatus;
+import com.codecool.battleship.board.*;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
@@ -13,18 +12,27 @@ public class Game {
     private final Display display = new Display();
     private final Input input = new Input();
 
-    public void playRound(int activePlayer, Board board) {
+    public void gameLoop(int size) {
+        display.askForName();
+        Player player1 = new Player(input.askForName(), game);
+        display.askForName();
+        Player player2 = new Player(input.askForName(), game);
+        Player1Board player1Board = new Player1Board(size);
+        Player2Board player2Board = new Player2Board(size);
+    }
+
+    public void playRound(Player activePlayer, Board board) {
         display.turn(activePlayer);
         String shootArea = input.inputCoordinate();
         int[] shootCoordinates = input.toCoordinates(shootArea);
         int row = shootCoordinates[0];
         int col = shootCoordinates[1];
-        Square square = board.getSquare()[row][col];
-        String status = square.getStatus();
+        Square square = board.getBoard()[row][col];
+        SquareStatus status = square.getSquareStatus();
         switch (status) {
-            case "EMPTY":
+            case EMPTY:
                 square.setSquareStatus(SquareStatus.MISS);
-            case "SHIP":
+            case SHIP:
                 square.setSquareStatus(SquareStatus.HIT);
             default:
                 break;
@@ -36,7 +44,7 @@ public class Game {
     }
 
 
-    public boolean hasWon() {
+    public boolean hasWon(Player activePlayer) {
         return false;
     }
 
@@ -66,14 +74,12 @@ public class Game {
 
     private Orientation getShipOrientation(ShipType type) {
         display.askForOrientation();
-        Orientation shipOriented = defineOrientation(input.askForOrientation(), type);
-        return shipOriented;
+        return defineOrientation(input.askForOrientation(), type);
     }
 
     private int[] getStartingCoordinate(ShipType type) {
         display.askForCoordinates(type);
-        int[] shipNosePosition = input.toCoordinates(input.inputCoordinate());
-        return shipNosePosition;
+        return input.toCoordinates(input.inputCoordinate());
     }
 
     private Orientation defineOrientation(String input, ShipType type) {

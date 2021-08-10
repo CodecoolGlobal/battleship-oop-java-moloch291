@@ -25,6 +25,14 @@ public class Player {
         return fleet;
     }
 
+    public List<Ship> getShips() {
+        return ships;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public boolean isAlive() {
         return true;
     }

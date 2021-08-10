@@ -31,4 +31,9 @@ public class Player2Board extends Board {
             }
         }
     }
+
+    @Override
+    public Square[][] getBoard() {
+        return ocean;
+    }
 }

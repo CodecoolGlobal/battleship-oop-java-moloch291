@@ -20,4 +20,6 @@ public abstract class Board {
     public int getSize() {
         return size;
     }
+
+    public abstract Square[][] getBoard();
 }
