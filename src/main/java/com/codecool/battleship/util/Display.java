@@ -27,7 +27,7 @@ public class Display {
         String shipTypeName = type.getName();
         int shipLength = type.getSize();
         System.out.println(
-                "You are placing a " + shipTypeName + " which is " + shipLength + " long. Enter the starting coordinate " +
+                "You are placing a " + shipTypeName + " which is " + shipLength + " fields long. Enter the starting coordinate " +
                         "of your ship: \n");
     }
 
