@@ -6,6 +6,7 @@ import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -13,12 +14,13 @@ public class Game {
     private final Input input = new Input();
 
     public void gameLoop(int size) {
-        display.askForName();
-        Player player1 = new Player(input.askForName(), game);
-        display.askForName();
-        Player player2 = new Player(input.askForName(), game);
         Player1Board player1Board = new Player1Board(size);
         Player2Board player2Board = new Player2Board(size);
+        display.askForName();
+        Player player1 = new Player(input.askForName(), this,player1Board);
+        display.printBoard(player1Board,player1);
+        display.askForName();
+        Player player2 = new Player(input.askForName(), this, player2Board);
     }
 
     public void playRound(Player activePlayer, Board board) {
@@ -54,6 +56,7 @@ public class Game {
         Orientation shipOriented = getShipOrientation(type);
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+        System.out.println(positionList);
         return positionList;
     }
 

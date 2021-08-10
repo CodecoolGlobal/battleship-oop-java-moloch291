@@ -12,8 +12,8 @@ public class Display {
     public void printMenu() {
         System.out.println(
                 "Choose one of the menu points: \n" +
-                           "1: Play game \n" +
-                           "2: Quit \n");
+                        "1: Play game \n" +
+                        "2: Quit \n");
     }
 
     public void askForCoordinates() {
@@ -25,7 +25,7 @@ public class Display {
         String shipTypeName = type.getName();
         int shipLength = type.getSize();
         System.out.println(
-                "You are placing a" + shipTypeName + "which is" + shipLength + "long. Enter the starting coordinate:" +
+                "You are placing a " + shipTypeName + " which is " + shipLength + " long. Enter the starting coordinate " +
                         "of your ship: \n");
     }
 
@@ -37,11 +37,11 @@ public class Display {
             if (row + 1 < 10) output.append(" ");
             for (int column = 0; column < board.getSize(); column++) {
                 if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.EMPTY)
-                    output.append("|_").append("__");
+                    output.append("|_").append("\033[0;34m~").append("\033[0m_");
                 else {
                     if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.SHIP) {
                         output.append("|_").append("#_");
-                    } else if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT){
+                    } else if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT) {
                         output.append("|_").append("H_");
                     } else if (board.getBoard()[row][column].getSquareStatus() == SquareStatus.MISS) {
                         output.append("|_").append("M_");
@@ -79,6 +79,7 @@ public class Display {
     }
 
     public void askForOrientation() {
+        System.out.println("Give me the orientation");
     }
 
     public void clearConsole() {

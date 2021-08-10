@@ -5,6 +5,7 @@ import java.util.Arrays;
 public class Player1Board extends Board{
     private Square[][] ocean;
 
+
     public Player1Board(int size) {
         super(size);
         this.ocean = new Square[size][size];

@@ -12,4 +12,8 @@ public class Ship {
         this.placement = placement;
         this.type = type;
     }
+
+    public List<Square> getPlacement() {
+        return placement;
+    }
 }
