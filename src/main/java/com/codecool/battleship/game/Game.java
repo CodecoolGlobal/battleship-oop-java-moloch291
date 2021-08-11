@@ -155,7 +155,11 @@ public class Game {
     ) {
         ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
         Orientation shipOriented = getShipOrientation(type, board, validOrientations);
+        try {
         while (!validOrientations.contains(shipOriented.getName())) {
+            display.wrongCoordinates();
+            shipOriented = getShipOrientation(type, board, validOrientations);
+        }} catch (NullPointerException error) {
             display.wrongCoordinates();
             shipOriented = getShipOrientation(type, board, validOrientations);
         }
