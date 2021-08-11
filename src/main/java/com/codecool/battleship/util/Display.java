@@ -11,7 +11,7 @@ public class Display {
 
     private final String alphabetString = "abcdefghijklmnopqrstuvwxyz".toUpperCase();
 
-    public void printMenu() {
+   public void printMenu() {
         System.out.println(
                 "Choose one of the menu points: \n" +
                         "1: Play game \n" +

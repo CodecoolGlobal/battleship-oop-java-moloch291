@@ -67,13 +67,11 @@ public class Game {
         Square radarSquare = radar.getBoard()[row][col];
         SquareStatus status = square.getSquareStatus();
         switch (status) {
-            case EMPTY:
-                radarSquare.setSquareStatus(SquareStatus.MISS);
-                break;
-            case SHIP:
+            case EMPTY -> radarSquare.setSquareStatus(SquareStatus.MISS);
+            case SHIP -> {
                 radarSquare.setSquareStatus(SquareStatus.HIT);
                 opponent.setShipSquares();
-                break;
+            }
         }
         display.printRadar(radar, activePlayer);
     }
