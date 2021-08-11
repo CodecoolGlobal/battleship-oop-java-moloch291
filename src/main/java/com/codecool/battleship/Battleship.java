@@ -13,21 +13,19 @@ public class Battleship {
     private static void mainMenu(int mode) {
         Display display = new Display();
         Input input = new Input();
-        Game game = new Game();
         display.clearConsole();
         deliverErrorMessages(display, mode);
         display.printMenu();
         int menuInput = input.inputForMenu();
-        evaluateInput(display, input, game, menuInput);
+        evaluateInput(display, input, menuInput);
     }
 
     private static void evaluateInput(Display display,
                                       Input input,
-                                      Game game,
                                       int menuInput) {
         switch (menuInput) {
             case 1:
-                loadGame(display, input, game);
+                loadGame(display, input);
                 break;
             case 2:
                 display.clearConsole();
@@ -49,12 +47,14 @@ public class Battleship {
         }
     }
 
-    private static void loadGame(Display display, Input input, Game game) {
+    private static void loadGame(Display display, Input input) {
         display.clearConsole();
         display.askForBoardSize();
         int chosenSize = input.inputForMenu();
-        if (chosenSize >= 10 && chosenSize <= 20)
-            game.gameLoop(chosenSize);
+        if (chosenSize >= 10 && chosenSize <= 20) {
+            Game game = new Game(chosenSize);
+            game.gameLoop();
+        }
         else
             mainMenu(2);
     }

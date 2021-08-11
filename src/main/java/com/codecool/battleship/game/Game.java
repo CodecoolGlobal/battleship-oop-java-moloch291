@@ -11,22 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private final Display display = new Display();
-    private final Input input = new Input();
 
-    public void gameLoop(int size) {
+    private final Display display;
+    private final Input input;
+    private final Player1Board player1Board;
+    private final Player2Board player2Board;
+    private final Player1Radar player1Radar;
+    private final Player2Radar player2Radar;
+    private final Player player1;
+    private final Player player2;
 
-        Player1Board player1Board = new Player1Board(size);
-        Player2Board player2Board = new Player2Board(size);
-        Player1Radar player1Radar = new Player1Radar(size);
-        Player2Radar player2Radar = new Player2Radar(size);
+    public Game(int size) {
+        this.display = new Display();
+        this.input = new Input();
+        this.player1Board = new Player1Board(size);
+        this.player2Board = new Player2Board(size);
+        this.player1Radar = new Player1Radar(size);
+        this.player2Radar = new Player2Radar(size);
         display.clearConsole();
         display.askForName();
-        Player player1 = new Player(input.askForName(), this, player1Board);
+        this.player1 = new Player(input.askForName(), this, player1Board);
         display.clearConsole();
         display.askForName();
-        Player player2 = new Player(input.askForName(), this, player2Board);
+        this.player2 = new Player(input.askForName(), this, player2Board);
 
+    }
+
+    public void gameLoop() {
         int currentRound = 1;
         boolean isRunning = true;
         while (isRunning) {
@@ -90,16 +101,16 @@ public class Game {
         if (type != ShipType.DESTROYER) {
             return getOrientation(type, board, positionList, shipNosePosition);
         }
-        Orientation shipOriented = Orientation.EAST;
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
-        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
         return positionList;
     }
 
-    private List<Square> getOrientation(ShipType type,
-                                        Board board,
-                                        List<Square> positionList,
-                                        int[] shipNosePosition) {
+    private List<Square> getOrientation(
+            ShipType type,
+            Board board,
+            List<Square> positionList,
+            int[] shipNosePosition
+    ) {
         ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
         Orientation shipOriented = getShipOrientation(type, board, validOrientations);
         while (!validOrientations.contains(shipOriented.getName())) {
