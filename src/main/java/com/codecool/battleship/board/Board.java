@@ -10,10 +10,7 @@ public abstract class Board {
     }
 
     public boolean isPlacementOkay(Ship ship, Board board) {
-        boolean okayNorth = false;
-        boolean okaySouth = false;
-        boolean okayEast = false;
-        boolean okayWest = false;
+        boolean falseOccurence = false;
         boolean allOkay = false;
         for (Square square : ship.getPlacement()) {
             Square checkNorth;
@@ -40,20 +37,20 @@ public abstract class Board {
             } catch (IndexOutOfBoundsException error) {
                 checkWest = board.getBoard()[square.getX()][square.getY()];
             }
-            if (checkEast.getSquareStatus() != SquareStatus.SHIP) {
-                okayEast = true;
+            if (checkEast.getSquareStatus() == SquareStatus.SHIP) {
+                falseOccurence = true;
             }
-            if (checkWest.getSquareStatus() != SquareStatus.SHIP) {
-                okayWest = true;
+            if (checkWest.getSquareStatus() == SquareStatus.SHIP) {
+                falseOccurence = true;
             }
-            if (checkNorth.getSquareStatus() != SquareStatus.SHIP) {
-                okayNorth = true;
+            if (checkNorth.getSquareStatus() == SquareStatus.SHIP) {
+                falseOccurence = true;
             }
-            if (checkSouth.getSquareStatus() != SquareStatus.SHIP) {
-                okaySouth = true;
+            if (checkSouth.getSquareStatus() == SquareStatus.SHIP) {
+                falseOccurence = true;
             }
         }
-        if (okayEast && okayWest && okayNorth && okaySouth) {
+        if (!falseOccurence) {
             allOkay = true;
         };
         return allOkay;

@@ -23,9 +23,7 @@ public class BoardFactory {
         )) {
             display.printPlacementPhaseHeader(activePlayer);
             display.printBoard(board, activePlayer);
-            if (placeShip(board, fleet, new Ship(game.placeShip(type, board), type))) {
-                continue;
-            } else {
+            while (!placeShip(board, fleet, new Ship(game.placeShip(type, board), type))) {
                 placeShip(board, fleet, new Ship(game.placeShip(type, board), type));
             }
             display.clearConsole();
