@@ -3,6 +3,7 @@ package com.codecool.battleship.game;
 import com.codecool.battleship.board.Board;
 import com.codecool.battleship.board.BoardFactory;
 import com.codecool.battleship.board.Square;
+import com.codecool.battleship.board.SquareStatus;
 import com.codecool.battleship.ships.Ship;
 
 import java.util.ArrayList;
@@ -41,7 +42,13 @@ public class Player {
     }
 
     public boolean isAlive() {
-        return shipSquares > 0;
+        for (Ship ship : ships) {
+            for (Square coordinate : ship.getPlacement()) {
+                if (coordinate.getSquareStatus() == SquareStatus.SHIP)
+                    return true;
+            }
+        }
+        return false;
     }
 
     public Player(String name) {
