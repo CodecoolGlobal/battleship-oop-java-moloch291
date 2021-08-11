@@ -145,4 +145,8 @@ public class Display {
     public void printPlacementPhaseHeader(Player activePlayer) {
         System.out.println(activePlayer.getName() + "'s deployment phase:\n");
     }
+
+    public void deliverSunkMessage(String name) {
+        System.out.println("You destroyed the enemy " + name + "!");
+    }
 }

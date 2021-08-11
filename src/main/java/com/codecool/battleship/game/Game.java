@@ -22,29 +22,33 @@ public class Game {
     private final Player player2;
 
     public Game(int size) {
+
         this.display = new Display();
         this.input = new Input();
+
         this.player1Board = new Player1Board(size);
         this.player2Board = new Player2Board(size);
         this.player1Radar = new Player1Radar(size);
         this.player2Radar = new Player2Radar(size);
+
         display.clearConsole();
         display.askForName();
         this.player1 = new Player(input.askForName(), this, player1Board);
         display.clearConsole();
         display.askForName();
         this.player2 = new Player(input.askForName(), this, player2Board);
-
     }
 
     public void gameLoop() {
         int currentRound = 1;
         boolean isRunning = true;
         while (isRunning) {
+
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
             Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
+
             printShipDetails(activePlayer);
             playRound(activePlayer, opponent, activeBoard, activeRadar);
             if (hasWon(opponent) && !opponent.isAlive()) {
@@ -83,10 +87,36 @@ public class Game {
                 break;
             case SHIP:
                 radarSquare.setSquareStatus(SquareStatus.HIT);
+                damageEnemyShip(opponent.getShips(), shootCoordinates);
+                lookForSunkShips(opponent.getShips());
                 opponent.setShipSquares();
                 break;
         }
         display.printRadar(radar, activePlayer);
+    }
+
+    private void lookForSunkShips(List<Ship> enemyShips) {
+        for (Ship ship : enemyShips) {
+            int damagedTiles = 0;
+            for (Square tile : ship.getPlacement()) {
+                if (tile.getSquareStatus() == SquareStatus.HIT)
+                    damagedTiles++;
+            }
+            if (damagedTiles == ship.getPlacement().size()) {
+                display.deliverSunkMessage(ship.getType().getName());
+            }
+        }
+    }
+
+    private void damageEnemyShip(List<Ship> enemyShips, int[] shootCoordinates) {
+        for (Ship ship : enemyShips) {
+            for (Square coordinate : ship.getPlacement()) {
+                if (coordinate.getX() == shootCoordinates[0] &&
+                        coordinate.getY() == shootCoordinates[1]) {
+                    coordinate.setSquareStatus(SquareStatus.HIT);
+                }
+            }
+        }
     }
 
 

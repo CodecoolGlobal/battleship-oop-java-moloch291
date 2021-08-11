@@ -3,7 +3,6 @@ package com.codecool.battleship.board;
 public class Player2Radar extends Board {
     private final Square[][] ocean;
 
-
     public Player2Radar(int size) {
         super(size);
         this.ocean = new Square[size][size];

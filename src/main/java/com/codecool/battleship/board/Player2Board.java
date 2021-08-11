@@ -1,7 +1,5 @@
 package com.codecool.battleship.board;
 
-import java.util.Arrays;
-
 public class Player2Board extends Board {
     private final Square[][] ocean;
 
