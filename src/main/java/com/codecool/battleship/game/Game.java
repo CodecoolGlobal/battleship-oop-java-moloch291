@@ -7,9 +7,7 @@ import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 public class Game {
