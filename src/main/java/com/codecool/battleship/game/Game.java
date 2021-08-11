@@ -72,27 +72,33 @@ public class Game {
     }
 
     public void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
-        display.turn(activePlayer);
-        display.printRadar(radar, activePlayer);
+        prepareRound(activePlayer, radar);
         String shootArea = input.inputCoordinate();
         int[] shootCoordinates = input.toCoordinates(shootArea);
-        int row = shootCoordinates[0];
-        int col = shootCoordinates[1];
-        Square square = board.getBoard()[row][col];
-        Square radarSquare = radar.getBoard()[row][col];
+        Square square = board.getBoard()[shootCoordinates[0]][shootCoordinates[1]];
+        Square radarSquare = radar.getBoard()[shootCoordinates[0]][shootCoordinates[1]];
         SquareStatus status = square.getSquareStatus();
         switch (status) {
             case EMPTY:
                 radarSquare.setSquareStatus(SquareStatus.MISS);
                 break;
             case SHIP:
-                radarSquare.setSquareStatus(SquareStatus.HIT);
-                damageEnemyShip(opponent.getShips(), shootCoordinates);
-                lookForSunkShips(opponent.getShips());
-                opponent.setShipSquares();
+                hitShip(opponent, shootCoordinates, radarSquare);
                 break;
         }
         display.printRadar(radar, activePlayer);
+    }
+
+    private void prepareRound(Player activePlayer, Board radar) {
+        display.turn(activePlayer);
+        display.printRadar(radar, activePlayer);
+    }
+
+    private void hitShip(Player opponent, int[] shootCoordinates, Square radarSquare) {
+        radarSquare.setSquareStatus(SquareStatus.HIT);
+        damageEnemyShip(opponent.getShips(), shootCoordinates);
+        lookForSunkShips(opponent.getShips());
+        opponent.setShipSquares();
     }
 
     private void lookForSunkShips(List<Ship> enemyShips) {
