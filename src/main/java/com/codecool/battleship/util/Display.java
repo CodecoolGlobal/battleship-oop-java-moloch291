@@ -71,7 +71,7 @@ public class Display {
                     } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.HIT) {
                         output.append("\033[1;34m|_").append("\033[1;31mH").append("\033[1;34m_");
                     } else if (radar.getBoard()[row][column].getSquareStatus() == SquareStatus.MISS) {
-                        output.append("\033[1;34m|_").append("\033[1;33M").append("\033[1;34m_");
+                        output.append("\033[1;34m|_").append("\033[1;33mM").append("\033[1;34m_");
                     }
                 }
             }
