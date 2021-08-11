@@ -138,7 +138,7 @@ public class Game {
 
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
-        int[] shipNosePosition = getStartingCoordinate(type);
+        int[] shipNosePosition = getStartingCoordinate(type, "");
         shipNosePosition = validateNosePosition(type, board, shipNosePosition);
         if (type != ShipType.DESTROYER) {
             return getOrientation(type, board, positionList, shipNosePosition);

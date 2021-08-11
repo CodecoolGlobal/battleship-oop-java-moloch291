@@ -149,4 +149,8 @@ public class Display {
     public void printMessage(String errorMessage) {
         System.out.println(errorMessage);
     }
+
+    public void deliverSunkMessage(String name) {
+        System.out.println("You destroyed the enemy " + name + "!");
+    }
 }
