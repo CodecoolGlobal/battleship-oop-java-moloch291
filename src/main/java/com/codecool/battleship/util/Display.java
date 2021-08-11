@@ -145,4 +145,8 @@ public class Display {
     public void printPlacementPhaseHeader(Player activePlayer) {
         System.out.println(activePlayer.getName() + "'s deployment phase:\n");
     }
+
+    public void printMessage(String errorMessage) {
+        System.out.println(errorMessage);
+    }
 }

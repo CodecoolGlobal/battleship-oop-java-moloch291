@@ -4,6 +4,8 @@ import com.codecool.battleship.game.Game;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
+import java.util.InputMismatchException;
+
 public class Battleship {
 
     public static void main(String[] args) {
@@ -17,8 +19,13 @@ public class Battleship {
         display.clearConsole();
         deliverErrorMessages(display, mode);
         display.printMenu();
-        int menuInput = input.inputForMenu();
-        evaluateInput(display, input, game, menuInput);
+        try{
+            int menuInput = input.inputForMenu();
+            evaluateInput(display, input, game, menuInput);
+        } catch (InputMismatchException error) {
+            mainMenu(3);
+        }
+
     }
 
     private static void evaluateInput(Display display,
@@ -27,7 +34,7 @@ public class Battleship {
                                       int menuInput) {
         switch (menuInput) {
             case 1:
-                loadGame(display, input, game);
+                loadGame(display, input, game, "Choose a board size!");
                 break;
             case 2:
                 display.clearConsole();
@@ -49,15 +56,21 @@ public class Battleship {
         }
     }
 
-    private static void loadGame(Display display, Input input, Game game) {
+    private static void loadGame(Display display, Input input, Game game, String Message) {
         display.clearConsole();
-        display.askForBoardSize();
-        int chosenSize = input.inputForMenu();
-        if (chosenSize >= 10 && chosenSize <= 20)
+        display.printMessage(Message);
+        try {
+            int chosenSize = input.inputForMenu();
+            while (chosenSize < 10 || chosenSize > 20) {
+                display.clearConsole();
+                display.deliverSizeErrorMessage();
+                chosenSize = input.inputForMenu();
+            }
             game.gameLoop(chosenSize);
-        else
-            mainMenu(2);
+        } catch (InputMismatchException error) {
+            display.clearConsole();
+            display.deliverSizeErrorMessage();
+            loadGame(display, input, game, "Wrong input! Enter numbers please!");
+        }
     }
-
-
 }
