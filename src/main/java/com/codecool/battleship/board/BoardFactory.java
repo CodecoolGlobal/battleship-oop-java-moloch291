@@ -23,14 +23,22 @@ public class BoardFactory {
         )) {
             display.printPlacementPhaseHeader(activePlayer);
             display.printBoard(board, activePlayer);
-            placeShip(board, fleet, new Ship(game.placeShip(type, board), type));
+            if (placeShip(board, fleet, new Ship(game.placeShip(type, board), type))) {
+                continue;
+            } else {
+                placeShip(board, fleet, new Ship(game.placeShip(type, board), type));
+            }
             display.clearConsole();
         }
     }
 
-    private void placeShip(Board board, List<Ship> fleet, Ship ship) {
+    private boolean placeShip(Board board, List<Ship> fleet, Ship ship) {
         fleet.add(ship);
+        if (!board.isPlacementOkay(ship, board)) {
+            return false;
+        };
         boardPlacement(ship, board);
+        return true;
     }
 
     public void boardPlacement(Ship ship, Board board) {
