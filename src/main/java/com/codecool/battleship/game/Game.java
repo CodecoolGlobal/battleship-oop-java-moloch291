@@ -176,19 +176,44 @@ public class Game {
     private ArrayList<String> validOrientations(int[] shipNosePosition, ShipType type, Board board) {
         ArrayList<String> validDirection = new ArrayList<>();
 
-        if (shipNosePosition[0] - type.getSize() >= 0) {
+        if (shipNosePosition[0] - type.getSize() >= 0 &&
+                noShipInTheWay(type, Orientation.NORTH, board, shipNosePosition)) {
             validDirection.add("N");
         }
-        if (shipNosePosition[1] - type.getSize() >= 0) {
+        if (shipNosePosition[1] - type.getSize() >= 0 &&
+                noShipInTheWay(type, Orientation.WEST,  board, shipNosePosition)) {
             validDirection.add("W");
         }
-        if (shipNosePosition[0] + type.getSize() <= board.getSize()) {
+        if (shipNosePosition[0] + type.getSize() <= board.getSize() &&
+                noShipInTheWay(type, Orientation.SOUTH, board, shipNosePosition)) {
             validDirection.add("S");
         }
-        if (shipNosePosition[1] + type.getSize() <= board.getSize()) {
+        if (shipNosePosition[1] + type.getSize() <= board.getSize() &&
+                noShipInTheWay(type, Orientation.EAST, board, shipNosePosition)) {
             validDirection.add("E");
         }
         return validDirection;
+    }
+
+    private boolean noShipInTheWay(ShipType type, Orientation oriented, Board board, int[] shipNosePosition) {
+        for (int step = 1; step <= type.getSize(); step++) {
+            if (ifInBounds(oriented, board, shipNosePosition, step)) {
+                if (board.getBoard()
+                        [shipNosePosition[0] + oriented.getX() * step][shipNosePosition[1] + oriented.getY() * step]
+                            .getSquareStatus() == SquareStatus.SHIP) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+    }
+
+    private boolean ifInBounds(Orientation oriented, Board board, int[] shipNosePosition, int step) {
+        return shipNosePosition[0] + oriented.getX() * step >= 0 &&
+                shipNosePosition[0] + oriented.getX() * step < board.getSize() &&
+                shipNosePosition[1] + oriented.getY() * step >= 0 &&
+                shipNosePosition[1] + oriented.getY() * step < board.getSize();
     }
 
     private void fillUpPositionList(
@@ -199,9 +224,11 @@ public class Game {
     ) {
         int multiplierForShip = 1;
         for (int addition = 0; addition < type.getSize() - 1; addition++) {
-            positionList.add(new Square(shipNosePosition[0] + shipOriented.getX() * multiplierForShip,
-                    shipNosePosition[1] + shipOriented.getY() * multiplierForShip,
-                    SquareStatus.SHIP));
+            positionList.add(
+                    new Square(shipNosePosition[0] + shipOriented.getX() * multiplierForShip,
+                            shipNosePosition[1] + shipOriented.getY() * multiplierForShip,
+                            SquareStatus.SHIP
+                    ));
             multiplierForShip++;
         }
     }

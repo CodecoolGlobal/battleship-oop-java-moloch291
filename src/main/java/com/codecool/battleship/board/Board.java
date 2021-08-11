@@ -51,7 +51,7 @@ public abstract class Board {
             }
             if (checkSouth.getSquareStatus() != SquareStatus.SHIP) {
                 okaySouth = true;
-            };
+            }
         }
         if (okayEast && okayWest && okayNorth && okaySouth) {
             allOkay = true;
