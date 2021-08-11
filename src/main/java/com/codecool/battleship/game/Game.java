@@ -7,7 +7,9 @@ import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 
 public class Game {
@@ -164,7 +166,7 @@ public class Game {
 
     private int[] validateNosePosition(ShipType type, Board board, int[] shipNosePosition) {
         while (!input.inputValidation(board, input.toString(shipNosePosition))) {
-            shipNosePosition = getStartingCoordinate(type);
+            shipNosePosition = getStartingCoordinate(type, "Enter valid direction!");
         }
         return shipNosePosition;
     }
@@ -207,9 +209,21 @@ public class Game {
         return defineOrientation(input.inputCoordinate(), type, board);
     }
 
-    private int[] getStartingCoordinate(ShipType type) {
+    private int[] getStartingCoordinate(ShipType type, String message) {
+        //display.clearConsole();
         display.askForCoordinates(type);
-        return input.toCoordinates(input.inputCoordinate());
+        display.printMessage('\n' + message + '\n');
+        try{
+            String currentInputCoordinate = input.inputCoordinate();
+            if (Character.isLetter(currentInputCoordinate.charAt(0))) {
+                return input.toCoordinates(currentInputCoordinate);
+            } else {
+                getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
+            }
+        } catch (NumberFormatException error) {
+            getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
+        }
+        return new int[]{2, 1};
     }
 
 

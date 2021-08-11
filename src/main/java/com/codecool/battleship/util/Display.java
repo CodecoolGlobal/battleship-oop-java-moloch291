@@ -146,7 +146,7 @@ public class Display {
         System.out.println(activePlayer.getName() + "'s deployment phase:\n");
     }
 
-    public void deliverSunkMessage(String name) {
-        System.out.println("You destroyed the enemy " + name + "!");
+    public void printMessage(String errorMessage) {
+        System.out.println(errorMessage);
     }
 }
