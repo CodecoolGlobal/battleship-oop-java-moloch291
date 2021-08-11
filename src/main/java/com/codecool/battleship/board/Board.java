@@ -58,7 +58,7 @@ public abstract class Board {
         };
         return allOkay;
     }
-
+    
     public int getSize() {
         return size;
     }
