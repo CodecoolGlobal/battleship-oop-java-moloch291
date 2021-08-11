@@ -43,13 +43,10 @@ public class Game {
         int currentRound = 1;
         boolean isRunning = true;
         while (isRunning) {
-
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
             Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
-
-            printShipDetails(activePlayer);
             playRound(activePlayer, opponent, activeBoard, activeRadar);
             if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
@@ -153,6 +150,18 @@ public class Game {
     ) {
         ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
         Orientation shipOriented = getShipOrientation(type, board, validOrientations);
+        shipOriented = validateOrientation(type, board, validOrientations, shipOriented);
+        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+        return positionList;
+    }
+
+    private Orientation validateOrientation(
+            ShipType type,
+            Board board,
+            ArrayList<String> validOrientations,
+            Orientation shipOriented
+    ) {
         try {
         while (!validOrientations.contains(shipOriented.getName())) {
             display.wrongCoordinates();
@@ -161,9 +170,7 @@ public class Game {
             display.wrongCoordinates();
             shipOriented = getShipOrientation(type, board, validOrientations);
         }
-        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
-        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
-        return positionList;
+        return shipOriented;
     }
 
     private int[] validateNosePosition(ShipType type, Board board, int[] shipNosePosition) {
