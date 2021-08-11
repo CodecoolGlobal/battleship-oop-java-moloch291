@@ -36,7 +36,7 @@ public class Game {
         this.player1 = new Player(input.askForName(), this, player1Board);
         display.clearConsole();
         display.askForName();
-        this.player2 = new Player(input.askForName(), this, player2Board);
+        this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board);
     }
 
     public void gameLoop() {
@@ -95,10 +95,14 @@ public class Game {
     }
 
     private void hitShip(Player opponent, int[] shootCoordinates, Square radarSquare) {
-        radarSquare.setSquareStatus(SquareStatus.HIT);
-        damageEnemyShip(opponent.getShips(), shootCoordinates);
-        lookForSunkShips(opponent.getShips());
-        opponent.setShipSquares();
+        if (radarSquare.getSquareStatus() == SquareStatus.HIT) {
+            System.out.println("You've already hit that!");
+        } else {
+            radarSquare.setSquareStatus(SquareStatus.HIT);
+            damageEnemyShip(opponent.getShips(), shootCoordinates);
+            lookForSunkShips(opponent.getShips());
+            opponent.setShipSquares();
+        }
     }
 
     private void lookForSunkShips(List<Ship> enemyShips) {
