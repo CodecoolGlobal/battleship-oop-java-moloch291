@@ -169,10 +169,14 @@ public class Game {
         int[] shipNosePosition = new int[] {randomRowNumber, randomColNumber};
         display.printMessage(Arrays.toString(shipNosePosition));
         //shipNosePosition = validateNosePosition(type, board, shipNosePosition);
-
+        int randomDirection = 0;
         ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
-        int randomDirection = ThreadLocalRandom.current().nextInt(0, validOrientations.size()-1);
-        Orientation shipRandomOriented = getRandomShipOrientation(type, board, validOrientations.get(randomDirection));
+        try {
+        randomDirection = ThreadLocalRandom.current().nextInt(0, validOrientations.size()-1);}
+        catch (IllegalArgumentException error){
+            randomPlaceShip(type,board);
+        }
+        Orientation shipRandomOriented = getRandomShipOrientation(type, board, validOrientations.get(randomDirection), validOrientations);
         shipRandomOriented = validateOrientation(type, board, validOrientations, shipRandomOriented);
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         fillUpPositionList(type, positionList, shipNosePosition, shipRandomOriented);
@@ -286,8 +290,8 @@ public class Game {
         return defineOrientation(input.inputCoordinate(), type, board, validOrientations);
     }
 
-    private Orientation getRandomShipOrientation(ShipType type, Board board, String validRandomOrientation) {
-        return defineOrientation(validRandomOrientation, type, board);
+    private Orientation getRandomShipOrientation(ShipType type, Board board, String validRandomOrientation, ArrayList<String> validOrientations) {
+        return defineOrientation(validRandomOrientation, type, board, validOrientations);
     }
     private int[] getStartingCoordinate(ShipType type, String message, Board board) {
         //display.clearConsole();
