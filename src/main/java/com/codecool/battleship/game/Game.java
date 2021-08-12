@@ -50,7 +50,7 @@ public class Game {
             try {
                 playRound(activePlayer, opponent, activeBoard, activeRadar);
             }
-            catch (ArrayIndexOutOfBoundsException| NumberFormatException error){
+            catch (ArrayIndexOutOfBoundsException| NumberFormatException| StringIndexOutOfBoundsException error){
                 gameLoop();
             }
             if (hasWon(opponent) && !opponent.isAlive()) {
