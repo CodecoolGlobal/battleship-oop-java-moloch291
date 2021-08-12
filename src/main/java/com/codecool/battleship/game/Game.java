@@ -83,10 +83,20 @@ public class Game {
                 hitShip(opponent, shootCoordinates, radarSquare);
                 break;
         }
+        finishRound(opponent, activePlayer, radar);
+    }
+
+    private void finishRound(Player opponent, Player activePlayer, Board radar) {
+        display.clearConsole();
+        display.turn(activePlayer);
         display.printRadar(radar, activePlayer);
+        lookForSunkShips(opponent.getShips(), opponent.getSunkShips());
+        display.askForEnter();
+        input.askEnter();
     }
 
     private void prepareRound(Player activePlayer, Board radar) {
+        display.clearConsole();
         display.turn(activePlayer);
         display.printRadar(radar, activePlayer);
     }
@@ -97,20 +107,20 @@ public class Game {
         } else {
             radarSquare.setSquareStatus(SquareStatus.HIT);
             damageEnemyShip(opponent.getShips(), shootCoordinates);
-            lookForSunkShips(opponent.getShips());
             opponent.setShipSquares();
         }
     }
 
-    private void lookForSunkShips(List<Ship> enemyShips) {
+    private void lookForSunkShips(List<Ship> enemyShips, List<Ship> enemySunkShips) {
         for (Ship ship : enemyShips) {
             int damagedTiles = 0;
             for (Square tile : ship.getPlacement()) {
                 if (tile.getSquareStatus() == SquareStatus.HIT)
                     damagedTiles++;
             }
-            if (damagedTiles == ship.getPlacement().size()) {
+            if (damagedTiles == ship.getPlacement().size() && !enemySunkShips.contains(ship)) {
                 display.deliverSunkMessage(ship.getType().getName());
+                enemySunkShips.add(ship);
             }
         }
     }

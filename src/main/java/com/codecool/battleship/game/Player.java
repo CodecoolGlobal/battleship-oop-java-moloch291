@@ -10,12 +10,14 @@ import java.util.List;
 
 public class Player {
     private List<Ship> ships;
+    private List<Ship> sunkShips;
     private final String name;
     private int shipSquares;
 
     public Player(String name, Game game, Board board) {
         this.name = name;
         this.ships = loadUpFleet(game, board);
+        this.sunkShips = new ArrayList<>();
         this.shipSquares = 0;
         for (Ship ship : ships) {
             for (Square ignored : ship.getPlacement()) {
@@ -34,6 +36,10 @@ public class Player {
 
     public List<Ship> getShips() {
         return ships;
+    }
+
+    public List<Ship> getSunkShips() {
+        return sunkShips;
     }
 
     public String getName() {
