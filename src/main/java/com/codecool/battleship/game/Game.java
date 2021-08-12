@@ -39,8 +39,8 @@ public class Game {
         this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board);
     }
 
-    public void gameLoop() {
-        int currentRound = 1;
+    public void gameLoop(int round) {
+        int currentRound = round;
         boolean isRunning = true;
         while (isRunning) {
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
@@ -51,7 +51,7 @@ public class Game {
                 playRound(activePlayer, opponent, activeBoard, activeRadar);
             }
             catch (ArrayIndexOutOfBoundsException| NumberFormatException| StringIndexOutOfBoundsException error){
-                gameLoop();
+                gameLoop(currentRound);
             }
             if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
