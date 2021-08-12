@@ -18,7 +18,7 @@ public class Battleship {
         display.clearConsole();
         deliverErrorMessages(display, mode);
         display.printMenu();
-        try{
+        try {
             int menuInput = input.inputForMenu();
             evaluateInput(display, input, menuInput);
         } catch (InputMismatchException error) {
@@ -65,7 +65,7 @@ public class Battleship {
                 chosenSize = input.inputForMenu();
             }
             Game game = new Game(chosenSize);
-            game.gameLoop();
+            game.gameLoop(1);
         } catch (InputMismatchException error) {
             display.clearConsole();
             display.deliverSizeErrorMessage();

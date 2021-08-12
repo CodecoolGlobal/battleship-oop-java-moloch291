@@ -25,10 +25,8 @@ public class Game {
     private final Player player1;
     private final Player player2;
 
-
     public Game(int size) {
 
-        final int[] placementOptionArray = {1, 2};
         this.display = new Display();
         this.input = new Input();
 
@@ -51,22 +49,23 @@ public class Game {
     }
 
 
-    public boolean contains(final int[] array, final int key) {
-        for (int element : array) {
-            return element == key;
-        }
-        return false;
-    }
 
-    public void gameLoop() {
-        int currentRound = 1;
+
+
+    public void gameLoop(int round) {
+        int currentRound = round;
         boolean isRunning = true;
         while (isRunning) {
             Player activePlayer = currentRound % 2 == 0 ? player2 : player1;
             Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
-            playRound(activePlayer, opponent, activeBoard, activeRadar);
+            try {
+                playRound(activePlayer, opponent, activeBoard, activeRadar);
+            }
+            catch (ArrayIndexOutOfBoundsException| NumberFormatException| StringIndexOutOfBoundsException error){
+                gameLoop(currentRound);
+            }
             if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
                 display.printResults(activePlayer);
@@ -154,7 +153,7 @@ public class Game {
 
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
-        int[] shipNosePosition = getStartingCoordinate(type, "");
+        int[] shipNosePosition = getStartingCoordinate(type, "", board);
         shipNosePosition = validateNosePosition(type, board, shipNosePosition);
         if (type != ShipType.DESTROYER) {
             return getOrientation(type, board, positionList, shipNosePosition);
@@ -204,10 +203,11 @@ public class Game {
             Orientation shipOriented
     ) {
         try {
-        while (!validOrientations.contains(shipOriented.getName())) {
-            display.wrongCoordinates();
-            shipOriented = getShipOrientation(type, board, validOrientations);
-        }} catch (NullPointerException error) {
+            while (!validOrientations.contains(shipOriented.getName())) {
+                display.wrongCoordinates();
+                shipOriented = getShipOrientation(type, board, validOrientations);
+            }
+        } catch (NullPointerException error) {
             display.wrongCoordinates();
             shipOriented = getShipOrientation(type, board, validOrientations);
         }
@@ -216,7 +216,7 @@ public class Game {
 
     private int[] validateNosePosition(ShipType type, Board board, int[] shipNosePosition) {
         while (!input.inputValidation(board, input.toString(shipNosePosition))) {
-            shipNosePosition = getStartingCoordinate(type, "Enter valid direction!");
+            shipNosePosition = getStartingCoordinate(type, "Enter valid direction!", board);
         }
         return shipNosePosition;
     }
@@ -229,7 +229,7 @@ public class Game {
             validDirection.add("N");
         }
         if (shipNosePosition[1] - type.getSize() >= 0 &&
-                noShipInTheWay(type, Orientation.WEST,  board, shipNosePosition)) {
+                noShipInTheWay(type, Orientation.WEST, board, shipNosePosition)) {
             validDirection.add("W");
         }
         if (shipNosePosition[0] + type.getSize() <= board.getSize() &&
@@ -248,7 +248,7 @@ public class Game {
             if (ifInBounds(oriented, board, shipNosePosition, step)) {
                 if (board.getBoard()
                         [shipNosePosition[0] + oriented.getX() * step][shipNosePosition[1] + oriented.getY() * step]
-                            .getSquareStatus() == SquareStatus.SHIP) {
+                        .getSquareStatus() == SquareStatus.SHIP) {
                     return false;
                 }
             }
@@ -283,33 +283,34 @@ public class Game {
 
     private Orientation getShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
         display.askForOrientation(validOrientations);
-        return defineOrientation(input.inputCoordinate(), type, board);
+        return defineOrientation(input.inputCoordinate(), type, board, validOrientations);
     }
-
 
     private Orientation getRandomShipOrientation(ShipType type, Board board, String validRandomOrientation) {
         return defineOrientation(validRandomOrientation, type, board);
     }
-
-    private int[] getStartingCoordinate(ShipType type, String message) {
+    private int[] getStartingCoordinate(ShipType type, String message, Board board) {
         //display.clearConsole();
         display.askForCoordinates(type);
-        display.printMessage('\n' + message + '\n');
-        try{
+        display.printMessage(message);
+        try {
             String currentInputCoordinate = input.inputCoordinate();
-            if (Character.isLetter(currentInputCoordinate.charAt(0))) {
+            if (input.inputValidation(board, currentInputCoordinate))
                 return input.toCoordinates(currentInputCoordinate);
-            } else {
-                getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
-            }
-        } catch (NumberFormatException error) {
-            getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
+            else
+                return getStartingCoordinate(type, "Enter a valid coordinate!", board);
+        } catch (NumberFormatException | StringIndexOutOfBoundsException | ArrayIndexOutOfBoundsException error) {
+            return getStartingCoordinate(type, "Enter a valid coordinate!", board);
         }
-        return new int[]{2, 1};
     }
 
 
-    private Orientation defineOrientation(String input, ShipType type, Board board) {
+    private Orientation defineOrientation(
+            String input,
+            ShipType type,
+            Board board,
+            ArrayList<String> validOrientations
+    ) {
         Orientation output = null;
         switch (input) {
             case "N":
@@ -325,7 +326,7 @@ public class Game {
                 output = Orientation.EAST;
                 break;
             default:
-                placeShip(type, board);
+                getShipOrientation(type, board, validOrientations);
         }
         return output;
     }
