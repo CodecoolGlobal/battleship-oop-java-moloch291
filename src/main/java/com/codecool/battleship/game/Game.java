@@ -47,7 +47,12 @@ public class Game {
             Player opponent = activePlayer == player1 ? player2 : player1;
             Board activeBoard = activePlayer == player1 ? player2Board : player1Board;
             Board activeRadar = activePlayer == player1 ? player2Radar : player1Radar;
-            playRound(activePlayer, opponent, activeBoard, activeRadar);
+            try {
+                playRound(activePlayer, opponent, activeBoard, activeRadar);
+            }
+            catch (ArrayIndexOutOfBoundsException| NumberFormatException error){
+                gameLoop();
+            }
             if (hasWon(opponent) && !opponent.isAlive()) {
                 display.clearConsole();
                 display.printResults(activePlayer);
