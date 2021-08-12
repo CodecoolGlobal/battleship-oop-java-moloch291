@@ -14,9 +14,9 @@ public class Player {
     private final String name;
     private int shipSquares;
 
-    public Player(String name, Game game, Board board) {
+    public Player(String name, Game game, Board board, int placementOption) {
         this.name = name;
-        this.ships = loadUpFleet(game, board);
+        this.ships = loadUpFleet(game, board, placementOption);
         this.sunkShips = new ArrayList<>();
         this.shipSquares = 0;
         for (Ship ship : ships) {
@@ -27,10 +27,19 @@ public class Player {
     }
 
 
-    private List<Ship> loadUpFleet(Game game, Board board) {
+    private List<Ship> loadUpFleet(Game game, Board board, int placementOption) {
         List<Ship> fleet = new ArrayList<>();
         BoardFactory manualPlace = new BoardFactory();
-        manualPlace.manualPlacement(board, this, fleet, game);
+        BoardFactory randomPlace = new BoardFactory();
+        switch (placementOption) {
+            case 2:
+                randomPlace.randomPlacement(board, this, fleet, game);
+                break;
+            default:
+                manualPlace.manualPlacement(board, this, fleet, game);
+                break;
+        }
+
         return fleet;
     }
 

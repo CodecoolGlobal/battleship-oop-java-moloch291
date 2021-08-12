@@ -6,6 +6,8 @@ import com.codecool.battleship.ships.Ship;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
+import java.util.concurrent.ThreadLocalRandom;
+import java.lang.reflect.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +32,15 @@ public class Game {
         this.player2Board = new Player2Board(size);
         this.player1Radar = new Player1Radar(size);
         this.player2Radar = new Player2Radar(size);
-
+        display.clearConsole();
+        display.printPlacementMenu();
+        int placementOption = input.inputForMenu();
         display.clearConsole();
         display.askForName();
-        this.player1 = new Player(input.askForName(), this, player1Board);
+        this.player1 = new Player(input.askForName(), this, player1Board, placementOption);
         display.clearConsole();
         display.askForName();
-        this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board);
+        this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board, placementOption);
     }
 
     public void gameLoop(int round) {
@@ -64,7 +68,7 @@ public class Game {
         Battleship.main(new String[]{});
     }
 
-    public void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
+    private void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
         prepareRound(activePlayer, radar);
         String shootArea = input.inputCoordinate();
         int[] shootCoordinates = input.toCoordinates(shootArea);
@@ -137,6 +141,14 @@ public class Game {
         return opponent.getShipSquares() == 0;
     }
 
+    public List<Square> placeRandomShip(ShipType type, Board board) {
+        List<Square> positionList = new ArrayList<>();
+        int[] shipNosePosition = getRandomStartingCoordinate(type, "", board);
+        shipNosePosition = validateNosePosition(type, board, shipNosePosition);
+        return getRandomOrientation(type, board, positionList, shipNosePosition);
+    }
+
+
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
         int[] shipNosePosition = getStartingCoordinate(type, "", board);
@@ -147,6 +159,22 @@ public class Game {
         positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
         return positionList;
     }
+
+    private List<Square> getRandomOrientation(
+            ShipType type,
+            Board board,
+            List<Square> positionList,
+            int[] shipNosePosition
+    ) {
+        ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
+        Orientation shipOriented = getRandomShipOrientation(type, board, validOrientations);
+        shipOriented = validateOrientation(type, board, validOrientations, shipOriented);
+        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+        fillUpPositionList(type, positionList, shipNosePosition, shipOriented);
+        return positionList;
+    }
+
+
 
     private List<Square> getOrientation(
             ShipType type,
@@ -247,9 +275,47 @@ public class Game {
         }
     }
 
+    private Orientation getRandomShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
+        int randomNum = 0;
+        if (validOrientations.size() == 1) {
+            randomNum = 0;
+        } else {
+            randomNum = ThreadLocalRandom.current().nextInt(0, validOrientations.size());
+        }
+        String currentDirection = validOrientations.get(randomNum);
+        return defineOrientation(currentDirection, type, board, validOrientations);
+    }
+
+
     private Orientation getShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
         display.askForOrientation(validOrientations);
         return defineOrientation(input.inputCoordinate(), type, board, validOrientations);
+    }
+
+
+    private String randomCoordinateGenerator(Board board) {
+        int randomRowNum = ThreadLocalRandom.current().nextInt(0, board.getSize());
+        String randomRowNumString=String.valueOf(randomRowNum);
+        int randomColNum = ThreadLocalRandom.current().nextInt(0, board.getSize());
+        char [] letters = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'};
+        char randomColLetter = Array.getChar(letters, randomColNum);
+        return randomColLetter + randomRowNumString;
+    }
+
+
+    private int[] getRandomStartingCoordinate(ShipType type, String message, Board board) {
+        //display.clearConsole();
+        display.askForCoordinates(type);
+        display.printMessage(message);
+        try {
+            String currentInputCoordinate = randomCoordinateGenerator(board);;
+            if (input.inputValidation(board, currentInputCoordinate))
+                return input.toCoordinates(currentInputCoordinate);
+            else
+                return getRandomStartingCoordinate(type, "Enter a valid coordinate!", board);
+        } catch (NumberFormatException | StringIndexOutOfBoundsException | ArrayIndexOutOfBoundsException error) {
+            return getRandomStartingCoordinate(type, "Enter a valid coordinate!", board);
+        }
     }
 
     private int[] getStartingCoordinate(ShipType type, String message, Board board) {
@@ -266,7 +332,6 @@ public class Game {
             return getStartingCoordinate(type, "Enter a valid coordinate!", board);
         }
     }
-
 
     private Orientation defineOrientation(
             String input,
