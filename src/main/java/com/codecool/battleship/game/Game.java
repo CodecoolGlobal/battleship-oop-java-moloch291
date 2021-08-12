@@ -60,14 +60,6 @@ public class Game {
         Battleship.main(new String[]{});
     }
 
-    private void printShipDetails(Player activePlayer) {
-        for (Ship ship : activePlayer.getShips()) {
-            for (Square coordinate : ship.getPlacement()) {
-                System.out.println(coordinate.getSquareStatus());
-            }
-        }
-    }
-
     public void playRound(Player activePlayer, Player opponent, Board board, Board radar) {
         prepareRound(activePlayer, radar);
         String shootArea = input.inputCoordinate();
