@@ -245,7 +245,7 @@ public class Game {
 
     private Orientation getShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
         display.askForOrientation(validOrientations);
-        return defineOrientation(input.inputCoordinate(), type, board);
+        return defineOrientation(input.inputCoordinate(), type, board, validOrientations);
     }
 
     private int[] getStartingCoordinate(ShipType type, String message, Board board) {
@@ -258,13 +258,18 @@ public class Game {
                 return input.toCoordinates(currentInputCoordinate);
             else
                 return getStartingCoordinate(type, "Enter a valid coordinate!", board);
-        } catch (NumberFormatException | StringIndexOutOfBoundsException error) {
+        } catch (NumberFormatException | StringIndexOutOfBoundsException | ArrayIndexOutOfBoundsException error) {
             return getStartingCoordinate(type, "Enter a valid coordinate!", board);
         }
     }
 
 
-    private Orientation defineOrientation(String input, ShipType type, Board board) {
+    private Orientation defineOrientation(
+            String input,
+            ShipType type,
+            Board board,
+            ArrayList<String> validOrientations
+    ) {
         Orientation output = null;
         switch (input) {
             case "N":
@@ -280,7 +285,7 @@ public class Game {
                 output = Orientation.EAST;
                 break;
             default:
-                placeShip(type, board);
+                getShipOrientation(type, board, validOrientations);
         }
         return output;
     }
