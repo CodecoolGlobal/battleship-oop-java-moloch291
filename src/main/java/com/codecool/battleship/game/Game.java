@@ -7,6 +7,10 @@ import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
 import com.codecool.battleship.util.Input;
 
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +25,10 @@ public class Game {
     private final Player player1;
     private final Player player2;
 
+
     public Game(int size) {
 
+        final int[] placementOptionArray = {1, 2};
         this.display = new Display();
         this.input = new Input();
 
@@ -32,11 +38,24 @@ public class Game {
         this.player2Radar = new Player2Radar(size);
 
         display.clearConsole();
-        display.askForName();
-        this.player1 = new Player(input.askForName(), this, player1Board);
+        display.printPlacementMenu();
+        int placementOption = input.inputForMenu();
+        //lekezelés szükséges
+
         display.clearConsole();
         display.askForName();
-        this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board);
+        this.player1 = new Player(input.askForName(), this, player1Board, placementOption);
+        display.clearConsole();
+        display.askForName();
+        this.player2 = new Player("\033[0;35m" + input.askForName() + "\033[0m", this, player2Board, placementOption);
+    }
+
+
+    public boolean contains(final int[] array, final int key) {
+        for (int element : array) {
+            return element == key;
+        }
+        return false;
     }
 
     public void gameLoop() {
@@ -144,6 +163,26 @@ public class Game {
         return positionList;
     }
 
+    public List<Square> randomPlaceShip(ShipType type, Board board) {
+        List<Square> positionList = new ArrayList<>();
+        int randomRowNumber = ThreadLocalRandom.current().nextInt(0, board.getSize() - 1);
+        int randomColNumber = ThreadLocalRandom.current().nextInt(0, board.getSize() - 1);
+        int[] shipNosePosition = new int[] {randomRowNumber, randomColNumber};
+        display.printMessage(Arrays.toString(shipNosePosition));
+        //shipNosePosition = validateNosePosition(type, board, shipNosePosition);
+
+        ArrayList<String> validOrientations = validOrientations(shipNosePosition, type, board);
+        int randomDirection = ThreadLocalRandom.current().nextInt(0, validOrientations.size()-1);
+        Orientation shipRandomOriented = getRandomShipOrientation(type, board, validOrientations.get(randomDirection));
+        shipRandomOriented = validateOrientation(type, board, validOrientations, shipRandomOriented);
+        positionList.add(new Square(shipNosePosition[0], shipNosePosition[1], SquareStatus.SHIP));
+        fillUpPositionList(type, positionList, shipNosePosition, shipRandomOriented);
+        System.out.println(positionList.get(0).getX());
+        System.out.println(positionList.get(0).getY());
+        return positionList;
+    }
+
+
     private List<Square> getOrientation(
             ShipType type,
             Board board,
@@ -245,6 +284,11 @@ public class Game {
     private Orientation getShipOrientation(ShipType type, Board board, ArrayList<String> validOrientations) {
         display.askForOrientation(validOrientations);
         return defineOrientation(input.inputCoordinate(), type, board);
+    }
+
+
+    private Orientation getRandomShipOrientation(ShipType type, Board board, String validRandomOrientation) {
+        return defineOrientation(validRandomOrientation, type, board);
     }
 
     private int[] getStartingCoordinate(ShipType type, String message) {

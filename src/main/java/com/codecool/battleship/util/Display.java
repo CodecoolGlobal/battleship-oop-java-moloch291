@@ -153,4 +153,11 @@ public class Display {
     public void deliverSunkMessage(String name) {
         System.out.println("You destroyed the enemy " + name + "!");
     }
+
+    public void printPlacementMenu() {
+        System.out.println("How would you like to place your ships: \n" +
+                "1. Manual ship placement \n" +
+                "2. Random ship placement \n");
+
+    }
 }

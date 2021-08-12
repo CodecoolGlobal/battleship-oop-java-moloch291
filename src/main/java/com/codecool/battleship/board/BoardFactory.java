@@ -46,7 +46,21 @@ public class BoardFactory {
         }
     }
 
-    public void randomPlacement() {
-
+    public void randomPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
+        display.clearConsole();
+        for (ShipType type : Arrays.asList(
+                ShipType.CARRIER,
+                ShipType.CRUISER,
+                ShipType.BATTLESHIP,
+                ShipType.SUBMARINE,
+                ShipType.DESTROYER
+        )) {
+            display.printPlacementPhaseHeader(activePlayer);
+            display.printBoard(board, activePlayer);
+            while (!placeShip(board, fleet, new Ship(game.randomPlaceShip(type, board), type))) {
+                placeShip(board, fleet, new Ship(game.randomPlaceShip(type, board), type));
+            }
+            display.clearConsole();
+        }
     }
 }
