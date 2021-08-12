@@ -2,7 +2,6 @@ package com.codecool.battleship.game;
 
 import com.codecool.battleship.Battleship;
 import com.codecool.battleship.board.*;
-import com.codecool.battleship.ships.Orientation;
 import com.codecool.battleship.ships.Ship;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
@@ -166,10 +165,11 @@ public class Game {
             Orientation shipOriented
     ) {
         try {
-        while (!validOrientations.contains(shipOriented.getName())) {
-            display.wrongCoordinates();
-            shipOriented = getShipOrientation(type, board, validOrientations);
-        }} catch (NullPointerException error) {
+            while (!validOrientations.contains(shipOriented.getName())) {
+                display.wrongCoordinates();
+                shipOriented = getShipOrientation(type, board, validOrientations);
+            }
+        } catch (NullPointerException error) {
             display.wrongCoordinates();
             shipOriented = getShipOrientation(type, board, validOrientations);
         }
@@ -191,7 +191,7 @@ public class Game {
             validDirection.add("N");
         }
         if (shipNosePosition[1] - type.getSize() >= 0 &&
-                noShipInTheWay(type, Orientation.WEST,  board, shipNosePosition)) {
+                noShipInTheWay(type, Orientation.WEST, board, shipNosePosition)) {
             validDirection.add("W");
         }
         if (shipNosePosition[0] + type.getSize() <= board.getSize() &&
@@ -210,7 +210,7 @@ public class Game {
             if (ifInBounds(oriented, board, shipNosePosition, step)) {
                 if (board.getBoard()
                         [shipNosePosition[0] + oriented.getX() * step][shipNosePosition[1] + oriented.getY() * step]
-                            .getSquareStatus() == SquareStatus.SHIP) {
+                        .getSquareStatus() == SquareStatus.SHIP) {
                     return false;
                 }
             }
@@ -252,7 +252,7 @@ public class Game {
         //display.clearConsole();
         display.askForCoordinates(type);
         display.printMessage(message);
-        try{
+        try {
             String currentInputCoordinate = input.inputCoordinate();
             if (input.inputValidation(board, currentInputCoordinate))
                 return input.toCoordinates(currentInputCoordinate);

@@ -1,4 +1,4 @@
-package com.codecool.battleship.ships;
+package com.codecool.battleship.game;
 
 public enum Orientation {
     NORTH(-1, 0, "N"),

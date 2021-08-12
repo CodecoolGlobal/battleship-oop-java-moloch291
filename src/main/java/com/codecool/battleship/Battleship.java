@@ -18,7 +18,7 @@ public class Battleship {
         display.clearConsole();
         deliverErrorMessages(display, mode);
         display.printMenu();
-        try{
+        try {
             int menuInput = input.inputForMenu();
             evaluateInput(display, input, menuInput);
         } catch (InputMismatchException error) {
