@@ -2,6 +2,7 @@ package com.codecool.battleship.game;
 
 import com.codecool.battleship.Battleship;
 import com.codecool.battleship.board.*;
+import com.codecool.battleship.ships.Orientation;
 import com.codecool.battleship.ships.Ship;
 import com.codecool.battleship.ships.ShipType;
 import com.codecool.battleship.util.Display;
@@ -135,7 +136,7 @@ public class Game {
 
     public List<Square> placeShip(ShipType type, Board board) {
         List<Square> positionList = new ArrayList<>();
-        int[] shipNosePosition = getStartingCoordinate(type, "");
+        int[] shipNosePosition = getStartingCoordinate(type, "", board);
         shipNosePosition = validateNosePosition(type, board, shipNosePosition);
         if (type != ShipType.DESTROYER) {
             return getOrientation(type, board, positionList, shipNosePosition);
@@ -177,7 +178,7 @@ public class Game {
 
     private int[] validateNosePosition(ShipType type, Board board, int[] shipNosePosition) {
         while (!input.inputValidation(board, input.toString(shipNosePosition))) {
-            shipNosePosition = getStartingCoordinate(type, "Enter valid direction!");
+            shipNosePosition = getStartingCoordinate(type, "Enter valid direction!", board);
         }
         return shipNosePosition;
     }
@@ -247,21 +248,19 @@ public class Game {
         return defineOrientation(input.inputCoordinate(), type, board);
     }
 
-    private int[] getStartingCoordinate(ShipType type, String message) {
+    private int[] getStartingCoordinate(ShipType type, String message, Board board) {
         //display.clearConsole();
         display.askForCoordinates(type);
-        display.printMessage('\n' + message + '\n');
+        display.printMessage(message);
         try{
             String currentInputCoordinate = input.inputCoordinate();
-            if (Character.isLetter(currentInputCoordinate.charAt(0))) {
+            if (input.inputValidation(board, currentInputCoordinate))
                 return input.toCoordinates(currentInputCoordinate);
-            } else {
-                getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
-            }
-        } catch (NumberFormatException error) {
-            getStartingCoordinate(type, "Enter valid coordinate form! Example: A8");
+            else
+                return getStartingCoordinate(type, "Enter a valid coordinate!", board);
+        } catch (NumberFormatException | StringIndexOutOfBoundsException error) {
+            return getStartingCoordinate(type, "Enter a valid coordinate!", board);
         }
-        return new int[]{2, 1};
     }
 
 
