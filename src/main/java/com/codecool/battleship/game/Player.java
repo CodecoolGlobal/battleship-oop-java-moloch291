@@ -29,17 +29,8 @@ public class Player {
 
     private List<Ship> loadUpFleet(Game game, Board board, int placementOption) {
         List<Ship> fleet = new ArrayList<>();
-        BoardFactory manualPlace = new BoardFactory();
-        BoardFactory randomPlace = new BoardFactory();
-        switch (placementOption) {
-            case 2:
-                randomPlace.randomPlacement(board, this, fleet, game);
-                break;
-            default:
-                manualPlace.manualPlacement(board, this, fleet, game);
-                break;
-        }
-
+        BoardFactory shipPlacement = new BoardFactory();
+        shipPlacement.placement(board, this, fleet, game, placementOption);
         return fleet;
     }
 

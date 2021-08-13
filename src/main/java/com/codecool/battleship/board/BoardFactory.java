@@ -12,7 +12,7 @@ import java.util.List;
 public class BoardFactory {
     Display display = new Display();
 
-    public void manualPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
+    public void placement(Board board, Player activePlayer, List<Ship> fleet, Game game, int placementOption) {
         display.clearConsole();
         for (ShipType type : Arrays.asList(
                 ShipType.CARRIER,
@@ -24,10 +24,36 @@ public class BoardFactory {
             display.printPlacementPhaseHeader(activePlayer);
             display.printBoard(board, activePlayer);
             boolean isPlaced = false;
-            while (!isPlaced) {
-                if (placeShip (board, fleet, new Ship(game.placeShip(type, board), type)))
-                    isPlaced = true;
+            if (placementOption == 1) {
+                while (!isPlaced) {
+                    if (placeShip (board, fleet, new Ship(game.placeShip(type, board, placementOption), type)))
+                        isPlaced = true;
+                }
+            } else {
+                while (!isPlaced) {
+                    if (placeShip (board, fleet, new Ship(game.placeShip(type, board, placementOption), type)))
+                        isPlaced = true;
+                }
             }
+            display.clearConsole();
+        }
+    }
+
+    public void randomPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
+        display.clearConsole();
+        for (ShipType type : Arrays.asList(
+                ShipType.CARRIER,
+                ShipType.CRUISER,
+                ShipType.BATTLESHIP,
+                ShipType.SUBMARINE,
+                ShipType.DESTROYER
+        )) {
+            display.printPlacementPhaseHeader(activePlayer);
+            display.printBoard(board, activePlayer);
+            boolean isPlaced = false;
+
+            display.printPlacementPhaseHeader(activePlayer);
+            display.printBoard(board, activePlayer);
             display.clearConsole();
         }
     }
@@ -48,23 +74,5 @@ public class BoardFactory {
         }
     }
 
-    public void randomPlacement(Board board, Player activePlayer, List<Ship> fleet, Game game) {
-        display.clearConsole();
-        for (ShipType type : Arrays.asList(
-                ShipType.CARRIER,
-                ShipType.CRUISER,
-                ShipType.BATTLESHIP,
-                ShipType.SUBMARINE,
-                ShipType.DESTROYER
-        )) {
-            display.printPlacementPhaseHeader(activePlayer);
-            display.printBoard(board, activePlayer);
-            boolean isPlaced = false;
-            while (!isPlaced) {
-                if (placeShip (board, fleet, new Ship(game.placeRandomShip(type, board), type)))
-                    isPlaced = true;
-            }
-            display.clearConsole();
-        }
-    }
+
 }
